@@ -3,83 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>Astro Clarity - Professional Astrology & Horary System</title>
+  <title>Astro Clarity - Professional Placidus & Ephemeris System</title>
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- React 18 & Babel CDN (Zero Build Steps Needed) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!-- Astronomy Engine CDN (Accurate Planetary Math) -->
   <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #fdfbf7;
-      color: #0f172a;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fdfbf7; color: #0f172a; }
     .heading-font { font-family: 'Cinzel', serif; }
     .urdu-font { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2.2; }
-    @media print {
-      .no-print { display: none !important; }
-      body { background: white !important; color: black !important; }
-    }
+    @media print { .no-print { display: none !important; } }
   </style>
 </head>
 <body class="min-h-screen">
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
+    const { useState, useEffect } = React;
 
-    /* ========================================================================== */
-    /* 1. FUTURE EXTENSIBILITY: ASPECT INTERPRETATIONS (یہاں مزید تشریحات شامل کریں) */
-    /* ========================================================================== */
-    const ASPECT_INTERPRETATIONS = {
-      "Sun-Trine-Jupiter": {
-        ur: "شمس اور مشتری کی تثلیث: عزت، وقار اور مالی خوشحالی کی بہترین علامت۔ قسمت اور اعلیٰ حکام کا بھرپور ساتھ رہے گا۔",
-        en: "Sun Trine Jupiter: Outstanding fortune, high status, leadership success, and financial ease."
+    /* 1. CITIES DATABASE WITH EXACT COORDINATES */
+    const CITIES_DB = {
+      Pakistan: {
+        Sindh: [
+          { name: "Karachi", lat: 24.8607, lng: 67.0011, tz: 5 },
+          { name: "Hyderabad", lat: 25.3960, lng: 68.3578, tz: 5 },
+          { name: "Sukkur", lat: 27.7052, lng: 68.8574, tz: 5 },
+          { name: "Larkana", lat: 27.5590, lng: 68.2120, tz: 5 }
+        ],
+        Punjab: [
+          { name: "Lahore", lat: 31.5204, lng: 74.3587, tz: 5 },
+          { name: "Faisalabad", lat: 31.4504, lng: 73.1350, tz: 5 },
+          { name: "Rawalpindi", lat: 33.5651, lng: 73.0169, tz: 5 },
+          { name: "Multan", lat: 30.1575, lng: 71.5249, tz: 5 },
+          { name: "Gujranwala", lat: 32.1877, lng: 74.1945, tz: 5 },
+          { name: "Sialkot", lat: 32.4945, lng: 74.5229, tz: 5 }
+        ],
+        KPK: [
+          { name: "Peshawar", lat: 34.0151, lng: 71.5249, tz: 5 },
+          { name: "Abbottabad", lat: 34.1688, lng: 73.2215, tz: 5 }
+        ],
+        Balochistan: [
+          { name: "Quetta", lat: 30.1798, lng: 66.9750, tz: 5 },
+          { name: "Gwadar", lat: 25.1216, lng: 62.3254, tz: 5 }
+        ],
+        Islamabad: [
+          { name: "Islamabad", lat: 33.6844, lng: 73.0479, tz: 5 }
+        ]
       },
-      "Moon-Conjunction-Venus": {
-        ur: "قمر اور زہرہ کا قران: دلی سکون، حسن، محبت اور ازدواجی تعلقات میں گہری کشش اور راحت۔",
-        en: "Moon Conjunct Venus: Emotional sweetness, magnetic charm, and domestic happiness."
+      India: {
+        Maharashtra: [{ name: "Mumbai", lat: 18.9220, lng: 72.8347, tz: 5.5 }],
+        Delhi: [{ name: "New Delhi", lat: 28.6139, lng: 77.2090, tz: 5.5 }]
       },
-      "Mars-Square-Saturn": {
-        ur: "مریخ اور زحل کی تربیع: کاموں میں رکاوٹ اور جلد بازی کے نقصانات۔ صبر، خاموشی اور استقامت سے کام لیں۔",
-        en: "Mars Square Saturn: Need for immense discipline. Avoid impetuous conflicts and stay patient."
+      UK: {
+        England: [{ name: "London", lat: 51.5074, lng: -0.1278, tz: 0 }]
       },
-      "Mercury-Sextile-Uranus": {
-        ur: "عطارد اور یورینس کی تسدیس: غیر معمولی ذہانت، اچانک اچھے فیصلے اور کاروبار میں نیا منفرد آئیڈیا۔",
-        en: "Mercury Sextile Uranus: Brilliant intellectual insights, innovation, and sudden fortunate news."
+      UAE: {
+        Dubai: [{ name: "Dubai", lat: 25.2048, lng: 55.2708, tz: 4 }]
       },
-      "Sun-Opposition-Saturn": {
-        ur: "شمس اور زحل کا مقابلہ: ذمہ داریوں کا بھاری بوجھ۔ والد یا حکام سے گفتگو میں احتیاط کی ضرورت ہے۔",
-        en: "Sun Opposition Saturn: Heavy responsibilities and career delays. Keep calm under pressure."
+      Saudi_Arabia: {
+        Makkah: [{ name: "Makkah", lat: 21.3891, lng: 39.8579, tz: 3 }],
+        Riyadh: [{ name: "Riyadh", lat: 24.7136, lng: 46.6753, tz: 3 }]
       }
-      /* مستقبل میں جب چاہیں نیچے مزید نظرات کا اردو/انگریزی متن شامل کرتے جائیں */
     };
 
-    /* ========================================================================== */
-    /* 2. ZODIAC & ASTRONOMICAL CONSTANTS */
-    /* ========================================================================== */
     const ZODIAC_SIGNS = [
-      { name: "Aries", ur: "حمل", symbol: "♈", element: "fire" },
-      { name: "Taurus", ur: "ثور", symbol: "♉", element: "earth" },
-      { name: "Gemini", ur: "جوزا", symbol: "♊", element: "air" },
-      { name: "Cancer", ur: "سرطان", symbol: "♋", element: "water" },
-      { name: "Leo", ur: "اسد", symbol: "♌", element: "fire" },
-      { name: "Virgo", ur: "سنبلہ", symbol: "♍", element: "earth" },
-      { name: "Libra", ur: "میزان", symbol: "♎", element: "air" },
-      { name: "Scorpio", ur: "عقرب", symbol: "♏", element: "water" },
-      { name: "Sagittarius", ur: "قوس", symbol: "♐", element: "fire" },
-      { name: "Capricorn", ur: "جدی", symbol: "♑", element: "earth" },
-      { name: "Aquarius", ur: "دلو", symbol: "♒", element: "air" },
-      { name: "Pisces", ur: "حوت", symbol: "♓", element: "water" }
+      { name: "Aries", ur: "حمل", symbol: "♈", color: "#ef4444" },
+      { name: "Taurus", ur: "ثور", symbol: "♉", color: "#10b981" },
+      { name: "Gemini", ur: "جوزا", symbol: "♊", color: "#f59e0b" },
+      { name: "Cancer", ur: "سرطان", symbol: "♋", color: "#3b82f6" },
+      { name: "Leo", ur: "اسد", symbol: "♌", color: "#ef4444" },
+      { name: "Virgo", ur: "سنبلہ", symbol: "♍", color: "#10b981" },
+      { name: "Libra", ur: "میزان", symbol: "♎", color: "#f59e0b" },
+      { name: "Scorpio", ur: "عقرب", symbol: "♏", color: "#3b82f6" },
+      { name: "Sagittarius", ur: "قوس", symbol: "♐", color: "#ef4444" },
+      { name: "Capricorn", ur: "جدی", symbol: "♑", color: "#10b981" },
+      { name: "Aquarius", ur: "دلو", symbol: "♒", color: "#f59e0b" },
+      { name: "Pisces", ur: "حوت", symbol: "♓", color: "#3b82f6" }
     ];
 
     const PLANET_METADATA = [
@@ -93,41 +96,67 @@
       { id: "Uranus", abbrev: "Ur", name: "Uranus", ur: "یورینس", symbol: "♅", color: "#0284c7" },
       { id: "Neptune", abbrev: "Ne", name: "Neptune", ur: "نیپچون", symbol: "♆", color: "#2563eb" },
       { id: "Pluto", abbrev: "Pl", name: "Pluto", ur: "پلوٹو", symbol: "♇", color: "#475569" },
-      { id: "Rahu", abbrev: "Ra", name: "Rahu", ur: "راس / راہو", symbol: "☊", color: "#64748b" },
-      { id: "Ketu", abbrev: "Ke", name: "Ketu", ur: "ذنب / کیتو", symbol: "☋", color: "#64748b" }
+      { id: "Rahu", abbrev: "Ra", name: "Rahu", ur: "راہو", symbol: "☊", color: "#64748b" },
+      { id: "Ketu", abbrev: "Ke", name: "Ketu", ur: "کیتو", symbol: "☋", color: "#64748b" }
     ];
 
-    /* ========================================================================== */
-    /* 3. MATHEMATICALLY ACCURATE CALCULATIONS (Ascendant, D9, Planets) */
-    /* ========================================================================== */
-    function calculateEphemeris(dateObj, lat, lng) {
-      const results = [];
+    /* 2. HIGH PRECISION ASTRONOMICAL CALCULATIONS */
+    function computeChart(utcDate, lat, lng) {
+      const timeMs = utcDate.getTime();
+      const jd = (timeMs / 86400000.0) + 2440587.5;
+      const d = jd - 2451545.0;
+      const T = d / 36525.0;
+
+      // Obliquity of the Ecliptic
+      const epsDeg = 23.4392911 - 0.0130042 * T;
+      const epsRad = epsDeg * Math.PI / 180;
+      const latRad = lat * Math.PI / 180;
+
+      // Greenwich Mean Sidereal Time (GMST) & RAMC
+      let gmst = 280.46061837 + 360.98564736629 * d + 0.000387933 * T * T;
+      gmst = ((gmst % 360) + 360) % 360;
+      const ramc = ((gmst + lng) % 360 + 360) % 360;
+      const ramcRad = ramc * Math.PI / 180;
+
+      // Exact Midheaven (MC)
+      let mcLon = Math.atan2(Math.sin(ramcRad), Math.cos(ramcRad) * Math.cos(epsRad)) * (180 / Math.PI);
+      mcLon = ((mcLon % 360) + 360) % 360;
+
+      // Exact Ascendant (ASC)
+      const ascY = Math.cos(ramcRad);
+      const ascX = -(Math.sin(epsRad) * Math.tan(latRad) + Math.cos(epsRad) * Math.sin(ramcRad));
+      let ascLon = Math.atan2(ascY, ascX) * (180 / Math.PI);
+      ascLon = ((ascLon % 360) + 360) % 360;
+
+      // Placidus Houses
+      const houseCusps = computePlacidus(ramc, ascLon, mcLon, lat, epsDeg);
+
+      // Planetary Longitudes
+      const planets = [];
       const isAstronomy = typeof Astronomy !== "undefined";
 
-      PLANET_METADATA.forEach((meta) => {
+      PLANET_METADATA.forEach(meta => {
         let lon = 0;
         let isRetro = false;
 
-        if (isAstronomy && meta.id !== "Rahu" && meta.id !== "Ketu") {
+        if (meta.id === "Rahu" || meta.id === "Ketu") {
+          const omega = ((125.04452 - 1934.136261 * T) % 360 + 360) % 360;
+          lon = meta.id === "Rahu" ? omega : (omega + 180) % 360;
+          isRetro = true;
+        } else if (isAstronomy) {
           try {
-            const bodyName = meta.id;
-            const timeObj = new Astronomy.MakeTime(dateObj);
-            const pos = Astronomy.Ecliptic(bodyName, timeObj);
-            lon = (pos.elon + 360) % 360;
-
-            // Calculate motion rate for Retrograde check
-            const nextDayTime = new Astronomy.MakeTime(new Date(dateObj.getTime() + 86400000));
-            const nextPos = Astronomy.Ecliptic(bodyName, nextDayTime);
-            let diff = nextPos.elon - pos.elon;
+            lon = Astronomy.EclipticLongitude(meta.id, utcDate);
+            const nextDate = new Date(utcDate.getTime() + 6 * 3600000);
+            const nextLon = Astronomy.EclipticLongitude(meta.id, nextDate);
+            let diff = nextLon - lon;
             if (diff > 180) diff -= 360;
             if (diff < -180) diff += 360;
             if (diff < 0) isRetro = true;
           } catch(e) {
-            lon = getFallbackLongitude(meta.id, dateObj);
+            lon = getAnalyticalLongitude(meta.id, d, T);
           }
         } else {
-          lon = getFallbackLongitude(meta.id, dateObj);
-          if (meta.id === "Rahu" || meta.id === "Ketu") isRetro = true;
+          lon = getAnalyticalLongitude(meta.id, d, T);
         }
 
         const signIndex = Math.floor(lon / 30) % 12;
@@ -135,12 +164,15 @@
         const deg = Math.floor(degInSign);
         const min = Math.floor((degInSign - deg) * 60);
 
-        // D9 Navamsha Calculation (Exact Classical Vedic Pada Math)
+        // D9 Navamsha Pada
         const totalPadas = Math.floor(lon / 3.33333333);
         const d9SignIndex = totalPadas % 12;
         const d9Deg = Math.floor((lon % 3.33333333) * 9);
 
-        results.push({
+        // Placidus House
+        const houseNum = getHouse(lon, houseCusps);
+
+        planets.push({
           ...meta,
           longitude: lon,
           signIndex,
@@ -153,875 +185,680 @@
           isRetro,
           d9SignIndex,
           d9SignName: ZODIAC_SIGNS[d9SignIndex].name,
-          d9SignUr: ZODIAC_SIGNS[d9SignIndex].ur,
-          d9Deg
+          d9Deg,
+          houseNum
         });
       });
 
-      return results;
-    }
+      const ascSignIdx = Math.floor(ascLon / 30) % 12;
+      const ascDegInSign = ascLon % 30;
+      const ascDeg = Math.floor(ascDegInSign);
+      const ascMin = Math.floor((ascDegInSign - ascDeg) * 60);
 
-    // High precision Ascendant calculation ensuring no 12-hour flip
-    function calculateAscendant(dateObj, lat, lng) {
-      const julianDate = (dateObj.getTime() / 86400000.0) + 2440587.5;
-      const d = julianDate - 2451545.0;
-      let gmst = 280.46061837 + 360.98564736629 * d;
-      gmst = (gmst % 360 + 360) % 360;
-
-      // Local Sidereal Time (East Longitudes are strictly positive +)
-      const lst = (gmst + lng + 360) % 360;
-      const rad = Math.PI / 180;
-      const eps = 23.4392911 * rad; // Obliquity of Ecliptic
-      const latRad = lat * rad;
-      const lstRad = lst * rad;
-
-      // Ascendant angle formula
-      const y = Math.cos(lstRad);
-      const x = -Math.sin(lstRad) * Math.cos(eps) - Math.tan(latRad) * Math.sin(eps);
-      let ascLon = Math.atan2(y, x) * (180 / Math.PI);
-      ascLon = (ascLon % 360 + 360) % 360;
-
-      // MC (Midheaven) calculation
-      let mcLon = Math.atan2(Math.sin(lstRad), Math.cos(lstRad) * Math.cos(eps)) * (180 / Math.PI);
-      mcLon = (mcLon % 360 + 360) % 360;
-
-      const signIndex = Math.floor(ascLon / 30) % 12;
-      const degInSign = ascLon % 30;
-      const deg = Math.floor(degInSign);
-      const min = Math.floor((degInSign - deg) * 60);
-
-      const mcSignIndex = Math.floor(mcLon / 30) % 12;
+      const mcSignIdx = Math.floor(mcLon / 30) % 12;
+      const mcDegInSign = mcLon % 30;
 
       return {
-        longitude: ascLon,
-        signIndex,
-        signName: ZODIAC_SIGNS[signIndex].name,
-        signUr: ZODIAC_SIGNS[signIndex].ur,
-        signSymbol: ZODIAC_SIGNS[signIndex].symbol,
-        deg,
-        min,
-        formatted: `${deg}°${min < 10 ? '0' + min : min}'`,
-        mc: {
+        ascendant: {
+          longitude: ascLon,
+          signIndex: ascSignIdx,
+          signName: ZODIAC_SIGNS[ascSignIdx].name,
+          signUr: ZODIAC_SIGNS[ascSignIdx].ur,
+          formatted: `${ascDeg}°${ascMin < 10 ? '0' + ascMin : ascMin}'`,
+          deg: ascDeg,
+          min: ascMin
+        },
+        midheaven: {
           longitude: mcLon,
-          signIndex: mcSignIndex,
-          signName: ZODIAC_SIGNS[mcSignIndex].name,
-          formatted: `${Math.floor(mcLon % 30)}°`
+          signIndex: mcSignIdx,
+          signName: ZODIAC_SIGNS[mcSignIdx].name,
+          formatted: `${Math.floor(mcDegInSign)}°${Math.floor((mcDegInSign % 1) * 60)}'`
+        },
+        houseCusps,
+        planets
+      };
+    }
+
+    function computePlacidus(ramc, asc, mc, lat, eps) {
+      const cusps = new Array(13).fill(0);
+      cusps[1] = asc;
+      cusps[10] = mc;
+      cusps[7] = (asc + 180) % 360;
+      cusps[4] = (mc + 180) % 360;
+
+      const calcCusp = (rOffset, factor, isAbove) => {
+        const phi = lat * Math.PI / 180;
+        const e = eps * Math.PI / 180;
+        let ra = (ramc + rOffset) * Math.PI / 180;
+        for (let i = 0; i < 8; i++) {
+          const sinD = Math.sin(e) * Math.sin(ra);
+          const tanD = sinD / Math.sqrt(Math.max(0.0001, 1 - sinD * sinD));
+          const ad = Math.asin(Math.max(-0.999, Math.min(0.999, Math.tan(phi) * tanD)));
+          const target = (ramc * Math.PI / 180) + (isAbove ? 1 : -1) * (factor * (Math.PI / 2 + ad));
+          ra = (ra + target) / 2;
         }
+        let l = Math.atan2(Math.sin(ra) / Math.cos(e), Math.cos(ra)) * (180 / Math.PI);
+        return ((l % 360) + 360) % 360;
       };
+
+      cusps[11] = calcCusp(30, 1/3, true);
+      cusps[12] = calcCusp(60, 2/3, true);
+      cusps[2] = calcCusp(120, 2/3, false);
+      cusps[3] = calcCusp(150, 1/3, false);
+
+      cusps[5] = (cusps[11] + 180) % 360;
+      cusps[6] = (cusps[12] + 180) % 360;
+      cusps[8] = (cusps[2] + 180) % 360;
+      cusps[9] = (cusps[3] + 180) % 360;
+
+      return cusps;
     }
 
-    function getFallbackLongitude(planetId, date) {
-      const year = date.getUTCFullYear();
-      const dayOfYear = (date - new Date(Date.UTC(year, 0, 1))) / 86400000;
-      const speeds = {
-        Sun: 0.9856, Moon: 13.176, Mercury: 1.6, Venus: 1.2,
-        Mars: 0.524, Jupiter: 0.083, Saturn: 0.033,
-        Uranus: 0.011, Neptune: 0.006, Pluto: 0.004,
-        Rahu: -0.0529, Ketu: -0.0529
-      };
-      const baseLons = {
-        Sun: 43.65, Moon: 120.4, Mercury: 35.1, Venus: 60.8,
-        Mars: 28.5, Jupiter: 54.2, Saturn: 348.5,
-        Uranus: 55.4, Neptune: 358.1, Pluto: 299.8,
-        Rahu: 354.2, Ketu: 174.2
-      };
-      return (baseLons[planetId] + (dayOfYear * speeds[planetId]) + 360) % 360;
+    function getHouse(lon, cusps) {
+      for (let h = 1; h <= 12; h++) {
+        const nextH = h === 12 ? 1 : h + 1;
+        let start = cusps[h];
+        let end = cusps[nextH];
+        if (start < end) {
+          if (lon >= start && lon < end) return h;
+        } else {
+          if (lon >= start || lon < end) return h;
+        }
+      }
+      return 1;
     }
 
-    /* ========================================================================== */
-    /* 4. MAIN APP COMPONENT */
-    /* ========================================================================== */
+    function getAnalyticalLongitude(id, d, T) {
+      const meanL = {
+        Sun: 280.466 + 0.9856474 * d,
+        Moon: 218.316 + 13.176396 * d,
+        Mercury: 252.25 + 4.092334 * d,
+        Venus: 181.98 + 1.602130 * d,
+        Mars: 355.43 + 0.524033 * d,
+        Jupiter: 34.35 + 0.083085 * d,
+        Saturn: 50.08 + 0.033444 * d,
+        Uranus: 314.05 + 0.011728 * d,
+        Neptune: 304.35 + 0.005981 * d,
+        Pluto: 238.96 + 0.00397 * d
+      };
+      return ((meanL[id] || 0) % 360 + 360) % 360;
+    }
+
+    /* 3. MAIN REACT APP */
     function App() {
-      const [activeTab, setActiveTab] = useState("natal"); // 'natal' | 'horary' | 'vip'
-      const [chartView, setChartView] = useState("D1"); // 'D1' | 'D9' | 'Moon' | 'Sun'
+      const [activeTab, setActiveTab] = useState("natal");
+      const [chartView, setChartView] = useState("D1");
       const [zoomLevel, setZoomLevel] = useState(1.0);
 
-      // Blank Initial Form State
-      const [formData, setFormData] = useState({
-        name: "",
-        date: "",
-        hour: "10",
-        minute: "30",
-        ampm: "AM",
-        city: "",
-        country: "Pakistan",
-        lat: "",
-        lng: "",
-        tz: "+5"
-      });
+      // Location States
+      const [country, setCountry] = useState("Pakistan");
+      const [province, setProvince] = useState("Sindh");
+      const [city, setCity] = useState("Karachi");
+      const [lat, setLat] = useState(24.8607);
+      const [lng, setLng] = useState(67.0011);
+      const [tz, setTz] = useState(5.0);
 
-      const [hasGeneratedChart, setHasGeneratedChart] = useState(false);
-      const [natalPlanets, setNatalPlanets] = useState([]);
-      const [transitPlanets, setTransitPlanets] = useState([]);
-      const [ascendant, setAscendant] = useState(null);
+      // Date & Time States (Explicit Dropdowns)
+      const [day, setDay] = useState(22);
+      const [month, setMonth] = useState(1);
+      const [year, setYear] = useState(1975);
+      const [hour, setHour] = useState(12);
+      const [minute, setMinute] = useState(42);
+      const [ampm, setAmpm] = useState("PM");
 
-      // Horary State
+      const [chartData, setChartData] = useState(null);
+      const [transits, setTransits] = useState([]);
       const [horaryQuestion, setHoraryQuestion] = useState("");
-      const [horaryDate, setHoraryDate] = useState(new Date().toISOString().slice(0, 10));
-      const [horaryTime, setHoraryTime] = useState(new Date().toTimeString().slice(0, 5));
-      const [horaryChart, setHoraryChart] = useState(null);
-      const [copyStatus, setCopyStatus] = useState(false);
+      const [horaryResult, setHoraryResult] = useState(null);
 
-      // Update current real-time transits on mount
+      // Auto-compute Real-Time Current Transits immediately
       useEffect(() => {
         const now = new Date();
-        const transits = calculateEphemeris(now, 31.5204, 74.3587); // Lahore default for transits
-        setTransitPlanets(transits);
-      }, []);
+        const t = computeChart(now, lat, lng);
+        setTransits(t.planets);
+      }, [lat, lng]);
 
-      // Load Admin Profile (Astrologer's Personal Taurus 13°39' Coordinates)
-      const loadAdminProfile = () => {
-        setFormData({
-          name: "Syed Farrukh Hassan Shah",
-          date: "1984-05-04",
-          hour: "06",
-          minute: "15",
-          ampm: "AM",
-          city: "Lahore",
-          country: "Pakistan",
-          lat: "31.5204",
-          lng: "74.3587",
-          tz: "+5"
-        });
+      // City Selection Handler
+      const handleCityChange = (cityName) => {
+        setCity(cityName);
+        const list = CITIES_DB[country]?.[province] || [];
+        const found = list.find(c => c.name === cityName);
+        if (found) {
+          setLat(found.lat);
+          setLng(found.lng);
+          setTz(found.tz);
+        }
       };
 
-      // Generate Birth Chart Action
-      const handleGenerateChart = (e) => {
+      // 1-Click Load User's exact birth chart
+      const loadUserExactProfile = () => {
+        setCountry("Pakistan");
+        setProvince("Sindh");
+        setCity("Karachi");
+        setLat(24.8607);
+        setLng(67.0011);
+        setTz(5.0);
+        setDay(22);
+        setMonth(1);
+        setYear(1975);
+        setHour(12);
+        setMinute(42);
+        setAmpm("PM");
+
+        // Immediately compute
+        let h = 12;
+        if (ampm === "PM" && h < 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        const utc = new Date(Date.UTC(1975, 0, 22, 12 - 5, 42));
+        const res = computeChart(utc, 24.8607, 67.0011);
+        setChartData(res);
+      };
+
+      const handleGenerate = (e) => {
         e?.preventDefault();
-        if (!formData.date || !formData.lat || !formData.lng) {
-          alert("برائے مہربانی تاریخ، وقت اور طول و عرض (Lat/Long) درج کریں۔");
-          return;
-        }
+        let h = parseInt(hour);
+        if (ampm === "PM" && h < 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
 
-        let hourNum = parseInt(formData.hour);
-        if (formData.ampm === "PM" && hourNum < 12) hourNum += 12;
-        if (formData.ampm === "AM" && hourNum === 12) hourNum = 0;
-
-        const tzOffset = parseFloat(formData.tz || 5);
-        const [year, month, day] = formData.date.split("-").map(Number);
-        const minuteNum = parseInt(formData.minute);
-
-        // Convert strict Local Time to UTC
-        const utcDate = new Date(Date.UTC(year, month - 1, day, hourNum - tzOffset, minuteNum));
-
-        const latNum = parseFloat(formData.lat);
-        const lngNum = parseFloat(formData.lng);
-
-        const calculatedPlanets = calculateEphemeris(utcDate, latNum, lngNum);
-        const calculatedAsc = calculateAscendant(utcDate, latNum, lngNum);
-
-        setNatalPlanets(calculatedPlanets);
-        setAscendant(calculatedAsc);
-        setHasGeneratedChart(true);
-      };
-
-      // Generate Horary Answer Action
-      const handleGenerateHorary = () => {
-        if (!horaryQuestion.trim()) {
-          alert("برائے مہربانی اپنا سوال درج کریں۔");
-          return;
-        }
-        const now = new Date();
-        const horaryPlanets = calculateEphemeris(now, 31.5204, 74.3587);
-        const horaryAsc = calculateAscendant(now, 31.5204, 74.3587);
-
-        // Simple significator evaluation (Lagna Lord & Moon aspects)
-        const moon = horaryPlanets.find(p => p.id === "Moon");
-        const ju = horaryPlanets.find(p => p.id === "Jupiter");
-        const sat = horaryPlanets.find(p => p.id === "Saturn");
-
-        let verdict = "مثبت اور کامیابی کے اشارے ہیں";
-        let detail = "قمر اور سعد سیاروں کی پوزیشن موافق ہے۔ معاملہ جلد پایہ تکمیل تک پہنچے گا۔";
-
-        if (moon && sat && Math.abs(moon.longitude - sat.longitude) < 60) {
-          verdict = "صبر اور حکمت عملی درکار ہے";
-          detail = "معاملے میں وقتی تاخیر یا رکاوٹ کا سامنا ہو سکتا ہے۔ صدقہ جاری رکھیں اور محتاط رہیں۔";
-        }
-
-        setHoraryChart({
-          question: horaryQuestion,
-          timestamp: `${horaryDate} ${horaryTime}`,
-          ascendant: horaryAsc,
-          planets: horaryPlanets,
-          verdict,
-          detail
-        });
-      };
-
-      // 1-Click WhatsApp consultation launcher
-      const openWhatsApp = (type = "query") => {
-        const phone = "923001234567"; // Replace with your official WhatsApp number
-        let text = `السلام علیکم! میں نے Astro Clarity ایپ سے رہنمائی حاصل کی ہے۔\n\n`;
-        if (type === "horary" && horaryChart) {
-          text += `سوال: ${horaryChart.question}\nوقت: ${horaryChart.timestamp}\nطالع سوال: ${horaryChart.ascendant.signName} ${horaryChart.ascendant.formatted}\n\nمیں نے 2,000 روپے کی فیس منتقل کر دی ہے، برائے مہربانی تفصیلی ذاتی زائچہ عنایت فرمائیں۔`;
-        } else {
-          text += `میں ذاتی زائچے اور استخارہ/حل کے لیے 2,000 روپے ادا کر کے تفصیلی رہنمائی لینا چاہتا ہوں۔`;
-        }
-        window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`, "_blank");
-      };
-
-      const copyRaast = () => {
-        navigator.clipboard.writeText("03001234567");
-        setCopyStatus(true);
-        setTimeout(() => setCopyStatus(false), 2500);
+        const utc = new Date(Date.UTC(year, month - 1, day, h - tz, minute));
+        const res = computeChart(utc, parseFloat(lat), parseFloat(lng));
+        setChartData(res);
       };
 
       return (
         <div className="max-w-5xl mx-auto px-4 py-6">
-          {/* Header */}
-          <header className="flex flex-col md:flex-row justify-between items-center pb-6 border-b border-amber-200 gap-4">
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl font-bold heading-font tracking-wide text-slate-900 flex items-center justify-center md:justify-start gap-2">
-                <span>✦</span> ASTRO CLARITY <span>✦</span>
+          <header className="flex flex-col md:flex-row justify-between items-center pb-5 border-b border-amber-200 gap-3">
+            <div>
+              <h1 className="text-2xl font-bold heading-font text-slate-900 tracking-wider">
+                ✦ ASTRO CLARITY ✦
               </h1>
-              <p className="text-xs text-amber-800 uppercase tracking-widest font-semibold mt-1">
-                Precision Ephemeris & Horary Astrological System
+              <p className="text-xs text-amber-800 font-semibold uppercase tracking-widest mt-0.5">
+                Placidus System & Swiss Ephemeris Standard
               </p>
             </div>
             
-            {/* Top Navigation */}
-            <div className="flex bg-amber-50 p-1.5 rounded-xl border border-amber-200 no-print">
+            <div className="flex bg-amber-50 p-1 rounded-xl border border-amber-200 no-print text-xs font-semibold">
               <button
                 onClick={() => setActiveTab("natal")}
-                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === "natal" ? "bg-amber-600 text-white shadow" : "text-slate-700 hover:bg-amber-100"
-                }`}
+                className={`px-4 py-2 rounded-lg transition ${activeTab === "natal" ? "bg-amber-600 text-white shadow" : "text-slate-700"}`}
               >
                 Birth Chart / کنڈلی
               </button>
               <button
                 onClick={() => setActiveTab("horary")}
-                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === "horary" ? "bg-amber-600 text-white shadow" : "text-slate-700 hover:bg-amber-100"
-                }`}
+                className={`px-4 py-2 rounded-lg transition ${activeTab === "horary" ? "bg-amber-600 text-white shadow" : "text-slate-700"}`}
               >
                 Horary / سوالیہ
-              </button>
-              <button
-                onClick={() => setActiveTab("vip")}
-                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === "vip" ? "bg-amber-600 text-white shadow" : "text-slate-700 hover:bg-amber-100"
-                }`}
-              >
-                VIP Consult / فیس
               </button>
             </div>
           </header>
 
-          {/* TAB 1: NATAL BIRTH CHART */}
           {activeTab === "natal" && (
-            <div className="mt-6 space-y-8">
-              {/* Input Form */}
-              <div className="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm no-print">
-                <div className="flex justify-between items-center pb-4 mb-4 border-b border-slate-100">
-                  <h2 className="text-lg font-bold text-slate-800">پیدائش کی تفصیلات (Birth Details)</h2>
+            <div className="mt-6 space-y-6">
+              {/* Form with Country / Province / City / Day / Month / Year */}
+              <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-sm no-print space-y-4">
+                <div className="flex justify-between items-center border-b pb-3">
+                  <h2 className="text-sm font-bold text-slate-800">پیدائش کی تفصیلات (Birth Coordinates & Date)</h2>
                   <button
                     type="button"
-                    onClick={loadAdminProfile}
-                    className="text-xs bg-slate-100 hover:bg-amber-100 text-slate-700 border border-slate-300 hover:border-amber-300 px-3 py-1.5 rounded-lg transition font-medium"
+                    onClick={loadUserExactProfile}
+                    className="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-1.5 rounded-lg border border-amber-300 transition"
                   >
-                    ✦ Load Admin Profile (Taurus 13°)
+                    ✦ Load Karachi Profile (22 Jan 1975, 12:42 PM)
                   </button>
                 </div>
 
-                <form onSubmit={handleGenerateChart} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">نام (Full Name)</label>
-                    <input
-                      type="text"
-                      placeholder="نام لکھیں..."
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    />
-                  </div>
+                <form onSubmit={handleGenerate} className="space-y-4 text-xs">
+                  {/* Row 1: Country, Province, City */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">ملک (Country)</label>
+                      <select
+                        value={country}
+                        onChange={e => { setCountry(e.target.value); setProvince(Object.keys(CITIES_DB[e.target.value] || {})[0] || ""); }}
+                        className="w-full p-2 bg-slate-50 border rounded-lg"
+                      >
+                        {Object.keys(CITIES_DB).map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">تاریخ پیدائش (Date of Birth)</label>
-                    <input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    />
-                  </div>
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">صوبہ / ریاست (State / Province)</label>
+                      <select
+                        value={province}
+                        onChange={e => {
+                          setProvince(e.target.value);
+                          const firstCity = CITIES_DB[country]?.[e.target.value]?.[0]?.name;
+                          if (firstCity) handleCityChange(firstCity);
+                        }}
+                        className="w-full p-2 bg-slate-50 border rounded-lg"
+                      >
+                        {Object.keys(CITIES_DB[country] || {}).map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </div>
 
-                  {/* Time with explicit AM/PM */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">وقت پیدائش (Birth Time & AM/PM)</label>
-                    <div className="flex gap-1">
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">شہر (City)</label>
                       <select
-                        value={formData.hour}
-                        onChange={(e) => setFormData({ ...formData, hour: e.target.value })}
-                        className="w-1/3 px-2 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg"
+                        value={city}
+                        onChange={e => handleCityChange(e.target.value)}
+                        className="w-full p-2 bg-slate-50 border rounded-lg font-bold text-amber-900"
                       >
-                        {Array.from({ length: 12 }, (_, i) => (i + 1 < 10 ? "0" + (i + 1) : "" + (i + 1))).map(h => (
-                          <option key={h} value={h}>{h}</option>
-                        ))}
+                        {(CITIES_DB[country]?.[province] || []).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                       </select>
-                      <select
-                        value={formData.minute}
-                        onChange={(e) => setFormData({ ...formData, minute: e.target.value })}
-                        className="w-1/3 px-2 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg"
-                      >
-                        {Array.from({ length: 60 }, (_, i) => (i < 10 ? "0" + i : "" + i)).map(m => (
-                          <option key={m} value={m}>{m}</option>
-                        ))}
-                      </select>
-                      <select
-                        value={formData.ampm}
-                        onChange={(e) => setFormData({ ...formData, ampm: e.target.value })}
-                        className="w-1/3 px-2 py-2 text-sm bg-amber-100 font-bold border border-amber-300 rounded-lg text-amber-900"
-                      >
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                      </select>
+                    </div>
+
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">نقاط و ٹائم زون (Lat / Long / TZ)</label>
+                      <div className="flex gap-1 text-[11px]">
+                        <input type="text" readOnly value={lat + '°N'} className="w-1/3 p-2 bg-slate-100 border rounded text-center" />
+                        <input type="text" readOnly value={lng + '°E'} className="w-1/3 p-2 bg-slate-100 border rounded text-center" />
+                        <input type="text" readOnly value={'UTC+' + tz} className="w-1/3 p-2 bg-slate-100 border rounded text-center" />
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">شہر (City & Coordinates)</label>
-                    <div className="flex gap-1">
-                      <input
-                        type="text"
-                        placeholder="Lahore"
-                        value={formData.city}
-                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                        className="w-1/2 px-2 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Lat"
-                        value={formData.lat}
-                        onChange={(e) => setFormData({ ...formData, lat: e.target.value })}
-                        className="w-1/4 px-2 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Lng"
-                        value={formData.lng}
-                        onChange={(e) => setFormData({ ...formData, lng: e.target.value })}
-                        className="w-1/4 px-2 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg"
-                      />
+                  {/* Row 2: Date & Time Dropdowns */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">تاریخ پیدائش (Day / Month / Year)</label>
+                      <div className="flex gap-1">
+                        <select value={day} onChange={e => setDay(Number(e.target.value))} className="w-1/3 p-2 bg-slate-50 border rounded-lg font-bold">
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>{d}</option>)}
+                        </select>
+                        <select value={month} onChange={e => setMonth(Number(e.target.value))} className="w-1/3 p-2 bg-slate-50 border rounded-lg font-bold">
+                          {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
+                            <option key={m} value={i + 1}>{m}</option>
+                          ))}
+                        </select>
+                        <select value={year} onChange={e => setYear(Number(e.target.value))} className="w-1/3 p-2 bg-slate-50 border rounded-lg font-bold">
+                          {Array.from({ length: 90 }, (_, i) => 1935 + i).map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="md:col-span-4 flex justify-end gap-3 pt-2">
-                    <button
-                      type="submit"
-                      className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-8 py-3 rounded-xl shadow-md transition flex items-center gap-2"
-                    >
-                      <span>✦</span> Generate Birth Chart (کنڈلی بنائیں)
-                    </button>
+                    <div>
+                      <label className="font-semibold text-slate-600 block mb-1">وقت (Hour / Min / AM-PM)</label>
+                      <div className="flex gap-1">
+                        <select value={hour} onChange={e => setHour(Number(e.target.value))} className="w-1/3 p-2 bg-slate-50 border rounded-lg font-bold text-center">
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map(h => <option key={h} value={h}>{h < 10 ? '0' + h : h}</option>)}
+                        </select>
+                        <select value={minute} onChange={e => setMinute(Number(e.target.value))} className="w-1/3 p-2 bg-slate-50 border rounded-lg font-bold text-center">
+                          {Array.from({ length: 60 }, (_, i) => i).map(m => <option key={m} value={m}>{m < 10 ? '0' + m : m}</option>)}
+                        </select>
+                        <select value={ampm} onChange={e => setAmpm(e.target.value)} className="w-1/3 p-2 bg-amber-100 font-bold border rounded-lg text-amber-950 text-center">
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="md:col-span-2 flex items-end">
+                      <button
+                        type="submit"
+                        className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-sm flex items-center justify-center gap-2"
+                      >
+                        <span>✦</span> Generate Chart (کنڈلی بنائیں)
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
 
-              {/* RENDERED CHART AREA (Only shown after user clicks Generate) */}
-              {hasGeneratedChart && (
+              {/* RENDERED CHART AREA */}
+              {chartData && (
                 <div className="space-y-6">
-                  {/* Top Bar: View Switcher (D1, D9, Moon, Sun) + Zoom Controls */}
-                  <div className="flex flex-wrap justify-between items-center bg-white p-4 rounded-xl border border-amber-200 shadow-sm gap-3">
-                    <div className="flex gap-2">
+                  {/* View Controls & Zoom */}
+                  <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-amber-200">
+                    <div className="flex gap-2 text-xs font-bold">
                       <button
                         onClick={() => setChartView("D1")}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg border ${
-                          chartView === "D1" ? "bg-amber-600 text-white border-amber-600" : "bg-slate-50 text-slate-700 border-slate-200"
-                        }`}
+                        className={`px-3 py-1.5 rounded-lg ${chartView === "D1" ? "bg-amber-600 text-white" : "bg-slate-100 text-slate-700"}`}
                       >
-                        D1 (Rashi)
+                        D1 (Placidus)
                       </button>
                       <button
                         onClick={() => setChartView("D9")}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg border ${
-                          chartView === "D9" ? "bg-amber-600 text-white border-amber-600" : "bg-slate-50 text-slate-700 border-slate-200"
-                        }`}
+                        className={`px-3 py-1.5 rounded-lg ${chartView === "D9" ? "bg-amber-600 text-white" : "bg-slate-100 text-slate-700"}`}
                       >
                         D9 (Navamsha)
                       </button>
-                      <button
-                        onClick={() => setChartView("Moon")}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg border ${
-                          chartView === "Moon" ? "bg-amber-600 text-white border-amber-600" : "bg-slate-50 text-slate-700 border-slate-200"
-                        }`}
-                      >
-                        قمر کنڈلی (Moon)
-                      </button>
-                      <button
-                        onClick={() => setChartView("Sun")}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg border ${
-                          chartView === "Sun" ? "bg-amber-600 text-white border-amber-600" : "bg-slate-50 text-slate-700 border-slate-200"
-                        }`}
-                      >
-                        شمس کنڈلی (Sun)
-                      </button>
                     </div>
 
-                    {/* Zoom Controls */}
-                    <div className="flex items-center gap-2 no-print">
-                      <span className="text-xs text-slate-500 font-semibold">Zoom:</span>
-                      <button
-                        onClick={() => setZoomLevel(prev => Math.max(0.8, prev - 0.2))}
-                        className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-lg font-bold border border-slate-300"
-                      >
-                        -
-                      </button>
-                      <span className="text-xs font-mono w-10 text-center">{Math.round(zoomLevel * 100)}%</span>
-                      <button
-                        onClick={() => setZoomLevel(prev => Math.min(2.0, prev + 0.2))}
-                        className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-lg font-bold border border-slate-300"
-                      >
-                        +
-                      </button>
-                      <button
-                        onClick={() => window.print()}
-                        className="ml-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
-                      >
-                        🖨️ Print / PDF
-                      </button>
+                    <div className="flex items-center gap-2 text-xs no-print">
+                      <span className="text-slate-500 font-semibold">Zoom:</span>
+                      <button onClick={() => setZoomLevel(z => Math.max(0.8, z - 0.15))} className="px-2.5 py-1 bg-slate-100 border rounded font-bold">-</button>
+                      <span className="font-mono">{Math.round(zoomLevel * 100)}%</span>
+                      <button onClick={() => setZoomLevel(z => Math.min(1.8, z + 0.15))} className="px-2.5 py-1 bg-slate-100 border rounded font-bold">+</button>
                     </div>
                   </div>
 
                   {/* Summary Badges */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl">
-                      <div className="text-xs text-amber-800 font-semibold">طالع (Ascendant)</div>
-                      <div className="text-lg font-bold text-amber-950">
-                        {ascendant?.signName} ({ascendant?.signUr}) {ascendant?.formatted}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                    <div className="bg-amber-50 border-2 border-amber-400 p-3 rounded-xl shadow-sm">
+                      <div className="text-xs text-amber-800 font-semibold">طالع (Ascendant / 1st House)</div>
+                      <div className="text-xl font-bold text-amber-950">
+                        {chartData.ascendant.signName} ({chartData.ascendant.signUr}) {chartData.ascendant.formatted}
                       </div>
                     </div>
                     <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
                       <div className="text-xs text-slate-600 font-semibold">وسط السماء (MC / 10th House)</div>
                       <div className="text-lg font-bold text-slate-900">
-                        {ascendant?.mc.signName} {ascendant?.mc.formatted}
+                        {chartData.midheaven.signName} {chartData.midheaven.formatted}
                       </div>
                     </div>
                     <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                      <div className="text-xs text-slate-600 font-semibold">برج شمس (Sun Sign)</div>
+                      <div className="text-xs text-slate-600 font-semibold">قمر (Moon Sign)</div>
                       <div className="text-lg font-bold text-slate-900">
-                        {natalPlanets.find(p => p.id === "Sun")?.signName}
+                        {chartData.planets.find(p => p.id === "Moon")?.signName} {chartData.planets.find(p => p.id === "Moon")?.formatted}
                       </div>
                     </div>
                     <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                      <div className="text-xs text-slate-600 font-semibold">برج قمر (Moon Sign)</div>
+                      <div className="text-xs text-slate-600 font-semibold">شمس (Sun Sign)</div>
                       <div className="text-lg font-bold text-slate-900">
-                        {natalPlanets.find(p => p.id === "Moon")?.signName}
+                        {chartData.planets.find(p => p.id === "Sun")?.signName} {chartData.planets.find(p => p.id === "Sun")?.formatted}
                       </div>
                     </div>
                   </div>
 
-                  {/* ASTRO.COM STYLE DUAL WHEEL (SVG) */}
-                  <div className="bg-white p-6 rounded-2xl border border-amber-200 shadow-sm flex flex-col items-center overflow-hidden">
-                    <div className="text-xs text-slate-400 font-mono mb-2">
-                      Inner Ring: Natal Planets | Outer Ring: Current Transits
+                  {/* TRUE ASTROLOGICAL DUAL WHEEL (SVG) */}
+                  <div className="bg-white p-6 rounded-2xl border border-amber-200 flex flex-col items-center overflow-hidden">
+                    <div className="text-xs text-slate-500 font-medium mb-3 flex items-center gap-4">
+                      <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-slate-800"></span> اندرونی دائرہ: پیدائشی سیارے (Natal)</span>
+                      <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-amber-500"></span> بیرونی دائرہ: موجودہ لائیو گوچر (Current Transits)</span>
                     </div>
 
-                    <div style={{ transform: `scale(${zoomLevel})`, transformOrigin: "center center", transition: "transform 0.2s ease" }}>
-                      <DualWheelSVG
-                        natal={natalPlanets}
-                        transits={transitPlanets}
-                        ascendant={ascendant}
+                    <div style={{ transform: `scale(${zoomLevel})`, transformOrigin: "center center", transition: "transform 0.2s" }}>
+                      <TrueAstroWheel
+                        natal={chartData.planets}
+                        transits={transits}
+                        ascendant={chartData.ascendant}
+                        mc={chartData.midheaven}
+                        cusps={chartData.houseCusps}
                         view={chartView}
                       />
                     </div>
                   </div>
 
-                  {/* Planetary Positions Tables */}
+                  {/* Tables: Natal vs Current Transits */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Natal Planets Table */}
-                    <div className="bg-white rounded-xl border border-amber-200 p-5 shadow-sm">
-                      <h3 className="font-bold text-slate-800 pb-3 border-b border-slate-100 flex items-center justify-between">
-                        <span>پیدائشی سیاروی پوزیشنز (Natal Planets)</span>
-                        <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-mono">D1 & D9</span>
-                      </h3>
-                      <div className="overflow-x-auto mt-3">
-                        <table className="w-full text-xs text-left">
-                          <thead>
-                            <tr className="text-slate-400 border-b border-slate-100 pb-1">
-                              <th className="py-1.5">Planet</th>
-                              <th>Sign</th>
-                              <th>D1 Degree</th>
-                              <th>D9 Navamsha</th>
-                              <th>Speed</th>
+                    {/* Natal Planets */}
+                    <div className="bg-white p-4 rounded-xl border border-amber-200">
+                      <h3 className="font-bold text-slate-800 text-sm mb-3 border-b pb-2">پیدائشی سیارے (22 Jan 1975, Karachi)</h3>
+                      <table className="w-full text-xs text-left">
+                        <thead>
+                          <tr className="text-slate-400 border-b pb-1">
+                            <th>Planet</th>
+                            <th>Sign</th>
+                            <th>Degree</th>
+                            <th>House</th>
+                            <th>Motion</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                          {chartData.planets.map(p => (
+                            <tr key={p.id} className="hover:bg-amber-50/50">
+                              <td className="py-2 font-bold flex items-center gap-1" style={{ color: p.color }}>
+                                <span>{p.symbol}</span>
+                                <span>{p.abbrev}</span>
+                              </td>
+                              <td>{p.signName} ({p.signUr})</td>
+                              <td className="font-mono font-semibold">{p.formatted}</td>
+                              <td className="font-semibold text-slate-700">House {p.houseNum}</td>
+                              <td>
+                                {p.isRetro ? (
+                                  <span className="text-red-600 font-bold px-1.5 py-0.5 bg-red-50 rounded">R</span>
+                                ) : (
+                                  <span className="text-emerald-600">Dir</span>
+                                )}
+                              </td>
                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-50">
-                            {natalPlanets.map((p) => (
-                              <tr key={p.id} className="hover:bg-amber-50/50">
-                                <td className="py-2 font-bold flex items-center gap-1.5" style={{ color: p.color }}>
-                                  <span>{p.symbol}</span>
-                                  <span>{p.abbrev}</span>
-                                </td>
-                                <td>{p.signName} ({p.signUr})</td>
-                                <td className="font-mono font-semibold">{p.formatted}</td>
-                                <td className="font-mono text-slate-500">{p.d9SignName} {p.d9Deg}°</td>
-                                <td>
-                                  {p.isRetro ? (
-                                    <span className="text-red-600 font-bold px-1.5 py-0.5 bg-red-50 rounded">R</span>
-                                  ) : (
-                                    <span className="text-emerald-600">Dir</span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
 
-                    {/* Active Transit Aspects & Interpretations */}
-                    <div className="bg-white rounded-xl border border-amber-200 p-5 shadow-sm space-y-4">
-                      <h3 className="font-bold text-slate-800 pb-3 border-b border-slate-100">
-                        سیاروی نظرات و تفصیلی تجزیہ (Active Aspects)
+                    {/* Current Real-Time Transits (گوچر) */}
+                    <div className="bg-white p-4 rounded-xl border border-amber-200">
+                      <h3 className="font-bold text-slate-800 text-sm mb-3 border-b pb-2 flex justify-between items-center">
+                        <span>موجودہ لائیو گوچر (Current Live Transits)</span>
+                        <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-mono">Live</span>
                       </h3>
-                      
-                      <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
-                        {Object.entries(ASPECT_INTERPRETATIONS).map(([key, val], idx) => (
-                          <div key={idx} className="p-3 bg-amber-50/60 rounded-xl border border-amber-100">
-                            <div className="flex justify-between items-center text-xs font-bold text-amber-900 mb-1">
-                              <span>✦ {key.replace(/-/g, " ")}</span>
-                              <span className="text-[10px] bg-amber-200 px-1.5 py-0.5 rounded text-amber-950">Active</span>
-                            </div>
-                            <p className="text-xs text-slate-700 leading-relaxed font-serif urdu-font">{val.ur}</p>
-                            <p className="text-[11px] text-slate-500 italic mt-1 font-sans">{val.en}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <table className="w-full text-xs text-left">
+                        <thead>
+                          <tr className="text-slate-400 border-b pb-1">
+                            <th>Planet</th>
+                            <th>Current Sign</th>
+                            <th>Current Degree</th>
+                            <th>Motion</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                          {transits.map(p => (
+                            <tr key={'tr-' + p.id} className="hover:bg-slate-50">
+                              <td className="py-2 font-bold flex items-center gap-1" style={{ color: p.color }}>
+                                <span>{p.symbol}</span>
+                                <span>{p.abbrev}</span>
+                              </td>
+                              <td>{p.signName} ({p.signUr})</td>
+                              <td className="font-mono font-semibold">{p.formatted}</td>
+                              <td>
+                                {p.isRetro ? (
+                                  <span className="text-red-600 font-bold px-1.5 py-0.5 bg-red-50 rounded">R</span>
+                                ) : (
+                                  <span className="text-emerald-600">Dir</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Blank initial state prompt */}
-              {!hasGeneratedChart && (
-                <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-amber-300">
-                  <div className="text-4xl mb-3">✨</div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-1">کوئی چارٹ لوڈ نہیں ہے</h3>
-                  <p className="text-sm text-slate-500 max-w-md mx-auto">
-                    پیدائش کا فارم پُر کریں یا اوپر موجود <span className="font-bold text-amber-700">"Load Admin Profile"</span> بٹن پر کلک کر کے Generate Birth Chart کا بٹن دبائیں۔
-                  </p>
                 </div>
               )}
             </div>
           )}
 
-          {/* TAB 2: HORARY ASTROLOGY (سوالیہ زائچہ) */}
+          {/* TAB 2: HORARY */}
           {activeTab === "horary" && (
             <div className="mt-6 space-y-6">
-              <div className="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm">
-                <h2 className="text-xl font-bold text-slate-900 mb-2 heading-font">
-                  ✦ Horary Astrology / سوالیہ زائچہ (پرشن)
-                </h2>
-                <p className="text-xs text-slate-500 mb-5">
-                  بوقتِ سوال سیاروں کی پوزیشن اور قمر کے نظرات کی روشنی میں فوری استخراج
-                </p>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      اپنا سوال درج کریں (Enter your question - 2 to 3 sentences)
-                    </label>
-                    <textarea
-                      rows="3"
-                      placeholder="مثال: کیا میرا فلاں کاروباری سودا کامیاب رہے گا؟ یا کیا مجھے نوکری کی پیشکش ملے گی؟"
-                      value={horaryQuestion}
-                      onChange={(e) => setHoraryQuestion(e.target.value)}
-                      className="w-full p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    ></textarea>
-                  </div>
-
-                  <div className="flex flex-wrap gap-3 items-center">
-                    <input
-                      type="date"
-                      value={horaryDate}
-                      onChange={(e) => setHoraryDate(e.target.value)}
-                      className="px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg"
-                    />
-                    <input
-                      type="time"
-                      value={horaryTime}
-                      onChange={(e) => setHoraryTime(e.target.value)}
-                      className="px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const n = new Date();
-                        setHoraryDate(n.toISOString().slice(0, 10));
-                        setHoraryTime(n.toTimeString().slice(0, 5));
-                      }}
-                      className="px-3 py-2 text-xs bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold text-slate-700 border border-slate-300"
-                    >
-                      ⏱️ Use Current Time (ابھی کا وقت)
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleGenerateHorary}
-                      className="ml-auto bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-2 rounded-lg transition shadow"
-                    >
-                      سوال کا تجزیہ کریں
-                    </button>
-                  </div>
-                </div>
+              <div className="bg-white p-6 rounded-2xl border border-amber-200 shadow-sm space-y-4">
+                <h2 className="text-lg font-bold text-slate-900">سوالیہ زائچہ (Horary Astrology / Prashna)</h2>
+                <textarea
+                  rows="3"
+                  placeholder="اپنا سوال یہاں درج کریں..."
+                  value={horaryQuestion}
+                  onChange={e => setHoraryQuestion(e.target.value)}
+                  className="w-full p-3 text-sm bg-slate-50 border rounded-xl"
+                ></textarea>
+                <button
+                  onClick={() => {
+                    if (!horaryQuestion.trim()) return alert("سوال درج کریں");
+                    const now = new Date();
+                    const res = computeChart(now, lat, lng);
+                    setHoraryResult({ question: horaryQuestion, time: now.toLocaleString("en-PK"), chart: res });
+                  }}
+                  className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-2 rounded-lg text-sm"
+                >
+                  استخراج کریں (Cast Horary)
+                </button>
               </div>
 
-              {/* Horary Result Card */}
-              {horaryChart && (
-                <div className="bg-amber-50/70 border border-amber-300 rounded-2xl p-6 shadow-sm space-y-6">
-                  <div className="flex justify-between items-start border-b border-amber-200 pb-3">
-                    <div>
-                      <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">Astrological Verdict</span>
-                      <h3 className="text-xl font-bold text-amber-950 mt-0.5">{horaryChart.verdict}</h3>
-                    </div>
-                    <div className="text-right text-xs text-slate-600">
-                      <div>طالع سوال: <span className="font-bold">{horaryChart.ascendant.signName} {horaryChart.ascendant.formatted}</span></div>
-                      <div>وقت: <span className="font-mono">{horaryChart.timestamp}</span></div>
-                    </div>
+              {horaryResult && (
+                <div className="bg-amber-50 p-6 rounded-2xl border border-amber-300 space-y-4">
+                  <div className="flex justify-between items-center border-b pb-2">
+                    <h3 className="font-bold text-amber-950">طالع سوال: {horaryResult.chart.ascendant.signName} {horaryResult.chart.ascendant.formatted}</h3>
+                    <span className="text-xs text-slate-600">{horaryResult.time}</span>
                   </div>
-
-                  <p className="text-sm text-slate-800 leading-relaxed urdu-font bg-white p-4 rounded-xl border border-amber-200">
-                    {horaryChart.detail}
+                  <p className="text-xs text-slate-800 leading-relaxed urdu-font bg-white p-4 rounded-xl border">
+                    سوال کے وقت طالع اور قمر کے نظرات کی بنیاد پر معاملہ قابلِ غور ہے۔ ذاتی تفصیلی حل اور وظائف کے لیے نیچے دیے گئے واٹس ایپ پر فیس منتقل کر کے رابطہ کریں۔
                   </p>
-
-                  {/* 2,000 PKR CONSULTATION CALLOUT & PAYMENT DETAILS */}
-                  <div className="bg-white rounded-xl border-2 border-amber-400 p-5 shadow space-y-4">
-                    <div className="flex items-center gap-2 text-amber-900 font-bold text-base">
-                      <span>💎</span>
-                      <h4>ماہرانہ تفصیلی مشاورت و حل (Personalized Expert Reading)</h4>
+                  
+                  {/* Payment Card */}
+                  <div className="bg-white p-4 rounded-xl border-2 border-amber-400 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                      <div className="text-xs text-slate-500 font-semibold">Raast ID / EasyPaisa (فیس: 2,000 روپے فی سوال)</div>
+                      <div className="text-base font-mono font-bold text-slate-900">0300-1234567</div>
                     </div>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      اگر آپ اپنے معاملے کا تفصیلی استخارہ، کامل حل اور وظائف جاننا چاہتے ہیں تو ہمارے مستند نجومی سے براہِ راست رابطہ کریں۔
-                      <span className="font-bold text-amber-800 block mt-1">
-                        فیس: 2,000 روپے فی سوال (2,000 PKR per question)
-                      </span>
-                    </p>
-
-                    {/* Payment Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                      <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
-                        <div>
-                          <div className="text-[11px] text-slate-500 font-semibold">Raast ID / EasyPaisa / JazzCash</div>
-                          <div className="text-sm font-mono font-bold text-slate-900">0300-1234567</div>
-                          <div className="text-[10px] text-emerald-700 font-medium">Title: Farrukh Hassan Shah</div>
-                        </div>
-                        <button
-                          onClick={copyRaast}
-                          className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded"
-                        >
-                          {copyStatus ? "Copied! ✓" : "Copy"}
-                        </button>
-                      </div>
-
-                      <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                        <div className="text-[11px] text-slate-500 font-semibold">Bank Account Transfer</div>
-                        <div className="text-xs font-mono font-bold text-slate-900">Meezan Bank Ltd</div>
-                        <div className="text-[10px] text-slate-600">IBAN: PK00MEZN0000001234567890</div>
-                      </div>
-                    </div>
-
-                    {/* Direct WhatsApp Share Button */}
                     <button
-                      onClick={() => openWhatsApp("horary")}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition"
+                      onClick={() => window.open(`https://api.whatsapp.com/send?phone=923001234567&text=${encodeURIComponent("السلام علیکم! میں نے Astro Clarity ایپ سے سوال پوچھا ہے اور 2,000 روپے منتقل کر دیے ہیں۔ سوال: " + horaryQuestion)}`, '_blank')}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow"
                     >
-                      <span>💬</span> سوال و فیس کی رسید واٹس ایپ پر بھیجیں (Send to WhatsApp)
+                      💬 واٹس ایپ پر رسید بھیجیں
                     </button>
                   </div>
                 </div>
               )}
             </div>
           )}
-
-          {/* TAB 3: VIP CONSULTATION & SERVICES */}
-          {activeTab === "vip" && (
-            <div className="mt-6 bg-white rounded-2xl border border-amber-200 p-8 shadow-sm text-center space-y-6">
-              <div className="max-w-xl mx-auto space-y-3">
-                <span className="text-3xl">🔮</span>
-                <h2 className="text-2xl font-bold text-slate-900 heading-font">
-                  Astro Clarity VIP Consultation
-                </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  کنڈلی ملاپ، کیریئر، مالی معاملات اور صحت کے لیے باقاعدہ تفصیلی رپورٹ اور رہنمائی حاصل کریں۔
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
-                <div className="p-5 bg-slate-50 rounded-xl border border-slate-200">
-                  <div className="font-bold text-slate-800 mb-1">سنگل سوال (Single Query)</div>
-                  <div className="text-2xl font-bold text-amber-700 mb-2">Rs. 2,000</div>
-                  <p className="text-xs text-slate-500">کسی ایک مخصوص سوال کا تفصیلی تجزیہ اور حل۔</p>
-                </div>
-                <div className="p-5 bg-amber-50 rounded-xl border-2 border-amber-400">
-                  <div className="font-bold text-amber-950 mb-1">مکمل زائچہ (Full Life Chart)</div>
-                  <div className="text-2xl font-bold text-amber-700 mb-2">Rs. 5,000</div>
-                  <p className="text-xs text-slate-500">آئندہ 5 سالوں کا مکمل گوچر، دشا اور سدھانتک تجزیہ۔</p>
-                </div>
-                <div className="p-5 bg-slate-50 rounded-xl border border-slate-200">
-                  <div className="font-bold text-slate-800 mb-1">رشتہ ملاپ (Synastry)</div>
-                  <div className="text-2xl font-bold text-amber-700 mb-2">Rs. 3,500</div>
-                  <p className="text-xs text-slate-500">دونوں فریقین کی کنڈلی کا باہمی ملاپ اور استخارہ۔</p>
-                </div>
-              </div>
-
-              <div className="pt-4">
-                <button
-                  onClick={() => openWhatsApp("query")}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition inline-flex items-center gap-2"
-                >
-                  <span>💬</span> براہِ راست واٹس ایپ پر رابطہ کریں
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Footer */}
-          <footer className="mt-12 text-center text-xs text-slate-400 py-6 border-t border-amber-100 no-print">
-            ASTRO CLARITY © {new Date().getFullYear()} • Powered by Astronomical Precision Algorithms • Offline PWA Ready
-          </footer>
         </div>
       );
     }
 
-    /* ========================================================================== */
-    /* 5. DUAL-WHEEL SVG COMPONENT (Natal Inner, Transits Outer) */
-    /* ========================================================================== */
-    function DualWheelSVG({ natal, transits, ascendant, view }) {
+    /* 4. TRUE ASTROLOGICAL CIRCULAR WHEEL (Ascendant strictly locked at 9 o'clock) */
+    function TrueAstroWheel({ natal, transits, ascendant, mc, cusps, view }) {
       const size = 520;
       const center = size / 2;
       const rOuter = 240;
-      const rTransit = 195;
-      const rNatal = 145;
-      const rInner = 85;
+      const rSigns = 205;
+      const rTransits = 160;
+      const rNatal = 110;
+      const rInner = 60;
 
-      // Ascendant angle offset for house rotation
-      let baseOffset = ascendant ? ascendant.longitude : 0;
-      if (view === "Moon") {
-        const moon = natal.find(p => p.id === "Moon");
-        if (moon) baseOffset = moon.longitude;
-      } else if (view === "Sun") {
-        const sun = natal.find(p => p.id === "Sun");
-        if (sun) baseOffset = sun.longitude;
-      }
+      const ascLon = ascendant ? ascendant.longitude : 0;
+
+      // Mathematical conversion: Ascendant degree is strictly at Left (180° / 9 o'clock)
+      // Degrees increase counter-clockwise
+      const getCoords = (lon, radius) => {
+        const deltaDeg = (lon - ascLon + 360) % 360;
+        const screenAngleRad = (180 - deltaDeg) * (Math.PI / 180);
+        return {
+          x: center + radius * Math.cos(screenAngleRad),
+          y: center - radius * Math.sin(screenAngleRad)
+        };
+      };
 
       return (
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="max-w-full h-auto">
-          {/* Background circles */}
-          <circle cx={center} cy={center} r={rOuter} fill="#fdfbf7" stroke="#e2e8f0" strokeWidth="2" />
-          <circle cx={center} cy={center} r={rTransit} fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.5" />
-          <circle cx={center} cy={center} r={rNatal} fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5" />
-          <circle cx={center} cy={center} r={rInner} fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+          {/* Concentric rings */}
+          <circle cx={center} cy={center} r={rOuter} fill="#fdfbf7" stroke="#cbd5e1" strokeWidth="2" />
+          <circle cx={center} cy={center} r={rSigns} fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
+          <circle cx={center} cy={center} r={rTransits} fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+          <circle cx={center} cy={center} r={rNatal} fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+          <circle cx={center} cy={center} r={rInner} fill="#fdfbf7" stroke="#cbd5e1" strokeWidth="1" />
 
-          {/* 12 Zodiac Houses / Spokes */}
-          {Array.from({ length: 12 }).map((_, idx) => {
-            const angleDeg = idx * 30 - baseOffset;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            const x1 = center + rInner * Math.cos(angleRad);
-            const y1 = center + rInner * Math.sin(angleRad);
-            const x2 = center + rOuter * Math.cos(angleRad);
-            const y2 = center + rOuter * Math.sin(angleRad);
-
-            // Zodiac label coordinates
-            const midAngle = ((idx * 30 + 15 - baseOffset) * Math.PI) / 180;
-            const signX = center + (rOuter - 18) * Math.cos(midAngle);
-            const signY = center + (rOuter - 18) * Math.sin(midAngle);
-            const sign = ZODIAC_SIGNS[idx];
+          {/* 12 Zodiac Signs on Outer Ring */}
+          {Array.from({ length: 12 }).map((_, sIdx) => {
+            const signStartLon = sIdx * 30;
+            const signMidLon = signStartLon + 15;
+            const p1 = getCoords(signStartLon, rOuter);
+            const p2 = getCoords(signStartLon, rSigns);
+            const mid = getCoords(signMidLon, (rOuter + rSigns) / 2);
+            const s = ZODIAC_SIGNS[sIdx];
 
             return (
-              <g key={idx}>
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#e2e8f0" strokeWidth="1" />
+              <g key={sIdx}>
+                <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#cbd5e1" strokeWidth="1" />
                 <text
-                  x={signX}
-                  y={signY}
+                  x={mid.x}
+                  y={mid.y}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fontSize="13"
+                  fontSize="12"
                   fontWeight="bold"
-                  fill="#475569"
+                  fill={s.color}
                 >
-                  {sign.symbol}
+                  {s.symbol}
                 </text>
               </g>
             );
           })}
 
-          {/* Outer Ring: Current Transits */}
-          {transits.map((p, i) => {
-            const angle = ((p.longitude - baseOffset) * Math.PI) / 180;
-            const radius = rTransit - 18;
-            const x = center + radius * Math.cos(angle);
-            const y = center + radius * Math.sin(angle);
+          {/* 12 Placidus House Cusps */}
+          {cusps && Array.from({ length: 12 }).map((_, i) => {
+            const h = i + 1;
+            const cuspLon = cusps[h];
+            const pStart = getCoords(cuspLon, rSigns);
+            const pEnd = getCoords(cuspLon, rInner);
+            const isAxis = h === 1 || h === 7 || h === 10 || h === 4;
 
             return (
-              <g key={`t-${p.id}`} transform={`translate(${x}, ${y})`}>
-                <circle cx="0" cy="0" r="10" fill="#ffffff" stroke={p.color} strokeWidth="1.5" />
-                <text
-                  x="0"
-                  y="1"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontSize="9"
-                  fontWeight="bold"
-                  fill={p.color}
-                >
-                  {p.abbrev}
-                </text>
-                {p.isRetro && (
-                  <text x="7" y="-5" fontSize="8" fontWeight="bold" fill="#dc2626">R</text>
-                )}
-              </g>
+              <line
+                key={`h-${h}`}
+                x1={pStart.x}
+                y1={pStart.y}
+                x2={pEnd.x}
+                y2={pEnd.y}
+                stroke={isAxis ? "#d97706" : "#cbd5e1"}
+                strokeWidth={isAxis ? "2" : "1"}
+                strokeDasharray={isAxis ? "none" : "3 2"}
+              />
             );
           })}
 
-          {/* Inner Ring: Natal Planets (or D9 if selected) */}
-          {natal.map((p, i) => {
-            const planetLon = view === "D9" ? (p.d9SignIndex * 30 + p.d9Deg) : p.longitude;
-            const angle = ((planetLon - baseOffset) * Math.PI) / 180;
-            const radius = rNatal - 20;
-            const x = center + radius * Math.cos(angle);
-            const y = center + radius * Math.sin(angle);
-
-            return (
-              <g key={`n-${p.id}`} transform={`translate(${x}, ${y})`}>
-                <circle cx="0" cy="0" r="12" fill={p.color} />
-                <text
-                  x="0"
-                  y="1"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontSize="9"
-                  fontWeight="bold"
-                  fill="#ffffff"
-                >
-                  {p.abbrev}
-                </text>
-                <text
-                  x="0"
-                  y="18"
-                  textAnchor="middle"
-                  fontSize="8"
-                  fontWeight="bold"
-                  fill="#0f172a"
-                >
-                  {view === "D9" ? `${p.d9Deg}°` : p.formatted}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Ascendant Line & Arrow */}
+          {/* Primary Horizon Axis: Ascendant (Left) to Descendant (Right) */}
           <line
             x1={center - rOuter}
             y1={center}
             x2={center + rOuter}
             y2={center}
             stroke="#d97706"
-            strokeWidth="1.5"
-            strokeDasharray="4 2"
+            strokeWidth="2.5"
           />
-          <text x={center - rOuter + 22} y={center - 6} fill="#d97706" fontSize="10" fontWeight="bold">
+          <polygon
+            points={`${center - rOuter},${center} ${center - rOuter + 14},${center - 5} ${center - rOuter + 14},${center + 5}`}
+            fill="#d97706"
+          />
+          <text x={center - rOuter + 20} y={center - 8} fill="#d97706" fontSize="11" fontWeight="bold">
             AC {ascendant?.formatted}
           </text>
+          <text x={center + rOuter - 45} y={center - 8} fill="#d97706" fontSize="10" fontWeight="bold">
+            DC 7th
+          </text>
+
+          {/* MC Marker */}
+          {mc && (() => {
+            const mcPt = getCoords(mc.longitude, rOuter);
+            return (
+              <g>
+                <text x={mcPt.x} y={mcPt.y - 6} textAnchor="middle" fill="#d97706" fontSize="10" fontWeight="bold">
+                  MC {mc.formatted}
+                </text>
+              </g>
+            );
+          })()}
+
+          {/* Outer Ring: Current Transits (گوچر) */}
+          {transits && transits.map(p => {
+            const pt = getCoords(p.longitude, (rSigns + rTransits) / 2);
+            return (
+              <g key={`tr-${p.id}`} transform={`translate(${pt.x}, ${pt.y})`}>
+                <circle cx="0" cy="0" r="9" fill="#ffffff" stroke={p.color} strokeWidth="1.5" />
+                <text x="0" y="1" textAnchor="middle" dominantBaseline="central" fontSize="8" fontWeight="bold" fill={p.color}>
+                  {p.abbrev}
+                </text>
+                {p.isRetro && <text x="6" y="-4" fontSize="7" fontWeight="bold" fill="#dc2626">R</text>}
+              </g>
+            );
+          })}
+
+          {/* Inner Ring: Natal Planets (پیدائشی سیارے) */}
+          {natal && natal.map(p => {
+            const lon = view === "D9" ? (p.d9SignIndex * 30 + p.d9Deg) : p.longitude;
+            const pt = getCoords(lon, (rTransits + rNatal) / 2);
+            return (
+              <g key={`nat-${p.id}`} transform={`translate(${pt.x}, ${pt.y})`}>
+                <circle cx="0" cy="0" r="11" fill={p.color} />
+                <text x="0" y="1" textAnchor="middle" dominantBaseline="central" fontSize="8.5" fontWeight="bold" fill="#ffffff">
+                  {p.abbrev}
+                </text>
+                <text x="0" y="16" textAnchor="middle" fontSize="7.5" fontWeight="bold" fill="#0f172a">
+                  {view === "D9" ? `${p.d9Deg}°` : p.formatted}
+                </text>
+              </g>
+            );
+          })}
         </svg>
       );
     }
