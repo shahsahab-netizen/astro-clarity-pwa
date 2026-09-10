@@ -31,8 +31,11 @@
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; }
-    th, td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f1f5f9; }
+    th, td { padding: 0.55rem 0.4rem; border-bottom: 1px solid #f1f5f9; }
     th { color: #64748b; font-weight: 600; }
+
+    .retro-tag { color: #dc2626; font-weight: 800; background: #fee2e2; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 2px; }
+    .dir-tag { color: #059669; font-weight: 600; background: #ecfdf5; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; }
 
     @media print { .no-print { display: none !important; } }
   </style>
@@ -59,7 +62,7 @@
 
     <!-- TAB 1: NATAL BIRTH CHART -->
     <div id="natal-section">
-      <!-- Input Form (Blank by default for visitors) -->
+      <!-- Input Form (100% Blank by default for visitors) -->
       <div class="card no-print" style="margin-bottom:1.5rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem; margin-bottom:1rem;">
           <h2 style="font-size:0.95rem; font-weight:700; color:#1e293b;">پیدائش کی تفصیلات (Enter Birth Details)</h2>
@@ -214,13 +217,14 @@
         <div class="grid-2">
           <!-- Natal Table -->
           <div class="card">
-            <h3 style="font-size:0.85rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.5rem;">
-              پیدائشی سیارے (Natal Planets)
+            <h3 style="font-size:0.85rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.5rem; display:flex; justify-content:space-between;">
+              <span>پیدائشی سیارے (Natal Planets)</span>
+              <span class="badge" style="background:#fef3c7; color:#92400e;">D1 & D9 Navamsha</span>
             </h3>
             <table>
               <thead>
                 <tr>
-                  <th>Planet</th><th>Sign</th><th>Degree</th><th>D9</th><th>House</th><th>Motion</th>
+                  <th>Planet</th><th>Sign</th><th>Degree</th><th>D9</th><th>House</th><th>Motion (حالت)</th>
                 </tr>
               </thead>
               <tbody id="natal-tbody"></tbody>
@@ -236,7 +240,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Planet</th><th>Current Sign</th><th>Current Degree</th><th>Motion</th>
+                  <th>Planet</th><th>Current Sign</th><th>Current Degree</th><th>Motion (حالت)</th>
                 </tr>
               </thead>
               <tbody id="transit-tbody"></tbody>
@@ -273,7 +277,7 @@
 
       <!-- Horary Result Display -->
       <div id="horary-output" style="display:none;" class="space-y-4">
-        <!-- 1. VISITOR / USER VIEW (Concise 1-Paragraph + Official WhatsApp Payment Card) -->
+        <!-- 1. VISITOR VIEW (1 Paragraph + Official JazzCash IBAN Payment Card) -->
         <div class="card" style="background:#fef3c7; border:2px solid #f59e0b; margin-bottom:1rem;">
           <div style="display:flex; justify-content:space-between; border-bottom:1px solid #fde68a; padding-bottom:0.5rem; margin-bottom:0.5rem;">
             <div>
@@ -415,13 +419,13 @@
       { name: "Gemini", ur: "جوزا", symbol: "♊", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Mercury" },
       { name: "Cancer", ur: "سرطان", symbol: "♋", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Moon" },
       { name: "Leo", ur: "اسد", symbol: "♌", bg: "#fee2e2", border: "#ef4444", text: "#b91c1c", ruler: "Sun" },
-      { name: "Virgo", ur: "سنبلہ", symbol: "♍", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Mercury" },
-      { name: "Libra", ur: "میزان", symbol: "♎", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Venus" },
-      { name: "Scorpio", ur: "عقرب", symbol: "♏", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Mars" },
-      { name: "Sagittarius", ur: "قوس", symbol: "♐", bg: "#fee2e2", border: "#ef4444", text: "#b91c1c", ruler: "Jupiter" },
-      { name: "Capricorn", ur: "جدی", symbol: "♑", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Saturn" },
-      { name: "Aquarius", ur: "دلو", symbol: "♒", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Saturn" },
-      { name: "Pisces", ur: "حوت", symbol: "♓", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Jupiter" }
+      { name: "Virgo", ur: "سنبلہ", symbol: "♍", element: "earth", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Mercury" },
+      { name: "Libra", ur: "میزان", symbol: "♎", element: "air", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Venus" },
+      { name: "Scorpio", ur: "عقرب", symbol: "♏", element: "water", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Mars" },
+      { name: "Sagittarius", ur: "قوس", symbol: "♐", element: "fire", bg: "#fee2e2", border: "#ef4444", text: "#b91c1c", ruler: "Jupiter" },
+      { name: "Capricorn", ur: "جدی", symbol: "♑", element: "earth", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Saturn" },
+      { name: "Aquarius", ur: "دلو", symbol: "♒", element: "air", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Saturn" },
+      { name: "Pisces", ur: "حوت", symbol: "♓", element: "water", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Jupiter" }
     ];
 
     const PLANET_METADATA = [
@@ -488,7 +492,6 @@
 
     // Populate Dropdowns on Window Load
     window.addEventListener("DOMContentLoaded", () => {
-      // Days 1..31
       const daySel = document.getElementById("birth-day");
       for (let i = 1; i <= 31; i++) {
         const opt = document.createElement("option");
@@ -496,7 +499,6 @@
         daySel.appendChild(opt);
       }
 
-      // Years 1935..2025
       const yearSel = document.getElementById("birth-year");
       for (let i = 2025; i >= 1935; i--) {
         const opt = document.createElement("option");
@@ -504,7 +506,6 @@
         yearSel.appendChild(opt);
       }
 
-      // Hours 1..12
       const hrSel = document.getElementById("birth-hour");
       for (let i = 1; i <= 12; i++) {
         const opt = document.createElement("option");
@@ -512,7 +513,6 @@
         hrSel.appendChild(opt);
       }
 
-      // Minutes 0..59
       const minSel = document.getElementById("birth-min");
       for (let i = 0; i < 60; i++) {
         const opt = document.createElement("option");
@@ -524,7 +524,7 @@
       computeLiveTransits();
     });
 
-    /* GEOCENTRIC ASTRONOMICAL ENGINE */
+    /* GEOCENTRIC ASTRONOMICAL ENGINE WITH PRECISE RETROGRADE DETECTION */
     function calculateChartData(utcDate, lat, lng) {
       const timeMs = utcDate.getTime();
       const jd = (timeMs / 86400000.0) + 2440587.5;
@@ -562,7 +562,7 @@
       // Placidus Cusps
       const cusps = computePlacidus(ramc, ascLon, mcLon, lat, epsDeg);
 
-      // Planets Longitudes
+      // Planets Longitudes & Mathematical Retrograde Verification
       const planets = [];
       const hasAstro = (window.Astronomy && Astronomy.GeoVector);
 
@@ -570,6 +570,7 @@
         let lon = 0;
         let isRetro = false;
 
+        // Rahu & Ketu are ALWAYS Retrograde in standard mean motion
         if (meta.id === "Rahu" || meta.id === "Ketu") {
           const omega = ((125.04452 - 1934.136261 * T) % 360 + 360) % 360;
           lon = meta.id === "Rahu" ? omega : (omega + 180) % 360;
@@ -581,13 +582,17 @@
             const ecl = Astronomy.Ecliptic(gVec);
             lon = ((ecl.elon % 360) + 360) % 360;
 
-            const nextTime = Astronomy.MakeTime(new Date(utcDate.getTime() + 6 * 3600000));
-            const nextGVec = Astronomy.GeoVector(meta.id, nextTime, true);
-            const nextEcl = Astronomy.Ecliptic(nextGVec);
-            let diff = nextEcl.elon - ecl.elon;
-            if (diff > 180) diff -= 360;
-            if (diff < -180) diff += 360;
-            if (diff < 0) isRetro = true;
+            // Accurate 24-Hour Difference for Retrograde Verification (±12 Hours Baseline)
+            if (meta.id !== "Sun" && meta.id !== "Moon") {
+              const t1 = Astronomy.MakeTime(new Date(utcDate.getTime() - 12 * 3600000));
+              const t2 = Astronomy.MakeTime(new Date(utcDate.getTime() + 12 * 3600000));
+              const gv1 = Astronomy.GeoVector(meta.id, t1, true);
+              const gv2 = Astronomy.GeoVector(meta.id, t2, true);
+              let diff = Astronomy.Ecliptic(gv2).elon - Astronomy.Ecliptic(gv1).elon;
+              if (diff > 180) diff -= 360;
+              if (diff < -180) diff += 360;
+              if (diff < 0) isRetro = true;
+            }
           } catch(e) {
             lon = getAnalyticalLon(meta.id, d);
           }
@@ -858,7 +863,7 @@
           <td style="font-family:monospace; font-weight:700;">${p.formatted}</td>
           <td style="font-family:monospace; color:#64748b;">${p.d9SignName} ${p.d9Deg}°</td>
           <td style="font-weight:700; color:#334155;">H${p.houseNum}</td>
-          <td>${p.isRetro ? '<span style="color:#dc2626; font-weight:bold; background:#fee2e2; padding:1px 5px; border-radius:3px;">R</span>' : '<span style="color:#059669;">Dir</span>'}</td>
+          <td>${p.isRetro ? '<span class="retro-tag">(R) رجعت</span>' : '<span class="dir-tag">مستقیم Dir</span>'}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -873,7 +878,7 @@
           <td style="font-weight:bold; color:${p.color};">${p.symbol} ${p.abbrev}</td>
           <td>${p.signName} (${p.signUr})</td>
           <td style="font-family:monospace; font-weight:700;">${p.formatted}</td>
-          <td>${p.isRetro ? '<span style="color:#dc2626; font-weight:bold; background:#fee2e2; padding:1px 5px; border-radius:3px;">R</span>' : '<span style="color:#059669;">Dir</span>'}</td>
+          <td>${p.isRetro ? '<span class="retro-tag">(R) رجعت</span>' : '<span class="dir-tag">مستقیم Dir</span>'}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -971,27 +976,30 @@
       const mcPt = getCoords(data.midheaven.longitude, rOuter);
       html += `<text x="${mcPt.x}" y="${mcPt.y - 6}" text-anchor="middle" fill="#d97706" font-size="10" font-weight="bold">MC ${data.midheaven.formatted}</text>`;
 
-      // Outer Ring: Current Live Transits
+      // Outer Ring: Current Live Transits (With Red Badge for Retrogrades)
       currentLiveTransits.forEach(p => {
         const pt = getCoords(p.longitude, (rSigns + rTransits) / 2);
         html += `
           <g transform="translate(${pt.x}, ${pt.y})">
-            <circle cx="0" cy="0" r="9.5" fill="#ffffff" stroke="${p.color}" stroke-width="1.5" />
+            <circle cx="0" cy="0" r="10" fill="#ffffff" stroke="${p.color}" stroke-width="1.5" />
             <text x="0" y="1" text-anchor="middle" dominant-baseline="central" font-size="8.5" font-weight="bold" fill="${p.color}">${p.abbrev}</text>
-            ${p.isRetro ? '<text x="6" y="-4" font-size="7.5" font-weight="bold" fill="#dc2626">R</text>' : ''}
+            ${p.isRetro ? '<circle cx="8" cy="-6" r="4.5" fill="#dc2626" /><text x="8" y="-4" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#ffffff">R</text>' : ''}
           </g>
         `;
       });
 
-      // Inner Ring: Natal Planets
+      // Inner Ring: Natal Planets (With explicit Red (R) badge on wheel degrees)
       planets.forEach(p => {
         const lon = (currentChartView === "D9") ? (p.d9SignIndex * 30 + p.d9Deg) : p.longitude;
         const pt = getCoords(lon, (rTransits + rNatal) / 2);
+        const degText = (currentChartView === "D9") ? (p.d9Deg + '°') : p.formatted;
         html += `
           <g transform="translate(${pt.x}, ${pt.y})">
-            <circle cx="0" cy="0" r="11.5" fill="${p.color}" />
+            <circle cx="0" cy="0" r="12" fill="${p.color}" />
             <text x="0" y="1" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="bold" fill="#ffffff">${p.abbrev}</text>
-            <text x="0" y="17" text-anchor="middle" font-size="8" font-weight="bold" fill="#0f172a">${currentChartView === "D9" ? p.d9Deg + '°' : p.formatted}</text>
+            <text x="0" y="17" text-anchor="middle" font-size="8" font-weight="bold" fill="#0f172a">
+              ${degText} ${p.isRetro ? '<tspan fill="#dc2626" font-weight="900"> (R)</tspan>' : ''}
+            </text>
           </g>
         `;
       });
