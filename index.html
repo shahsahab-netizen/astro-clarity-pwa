@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="ur" dir="ltr" id="html-root">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>Astro Clarity - Professional Placidus & Horary System</title>
+  <title>Astro Clarity - Placidus, D9, D10 & Horary Astrology</title>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap');
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -17,8 +17,9 @@
     }
     .heading-font { font-family: 'Cinzel', serif; }
     .urdu-font { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2.2; }
+    .arabic-font { font-family: 'Cairo', sans-serif; }
 
-    .container { max-width: 1040px; margin: 0 auto; padding: 1.25rem 1rem; }
+    .container { max-width: 1060px; margin: 0 auto; padding: 1.25rem 1rem; }
     .card { background: #ffffff; border: 1px solid #fde68a; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .btn-gold { background-color: #d97706; color: #ffffff; font-weight: 700; padding: 0.6rem 1.2rem; border-radius: 0.75rem; border: none; cursor: pointer; transition: 0.2s; }
     .btn-gold:hover { background-color: #b45309; }
@@ -30,28 +31,45 @@
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; }
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
 
-    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; }
-    th, td { padding: 0.55rem 0.4rem; border-bottom: 1px solid #f1f5f9; }
-    th { color: #64748b; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.74rem; text-align: left; }
+    th, td { padding: 0.5rem 0.35rem; border-bottom: 1px solid #f1f5f9; }
+    th { color: #64748b; font-weight: 600; background: #f8fafc; }
 
-    .retro-tag { color: #dc2626; font-weight: 800; background: #fee2e2; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 2px; }
-    .dir-tag { color: #059669; font-weight: 600; background: #ecfdf5; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; }
+    .retro-tag { color: #dc2626; font-weight: 800; background: #fee2e2; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; border: 1px solid #fca5a5; display: inline-flex; align-items: center; gap: 2px; }
+    .dir-tag { color: #059669; font-weight: 600; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .asc-row { background: #fffbeb !important; font-weight: 700; border-left: 3px solid #d97706; }
+
+    /* Q&A Accordion Item */
+    .qa-item { border: 1px solid #e2e8f0; border-radius: 0.75rem; margin-bottom: 0.5rem; overflow: hidden; background: #ffffff; }
+    .qa-header { padding: 0.75rem 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.85rem; background: #f8fafc; }
+    .qa-header:hover { background: #fef3c7; }
+    .qa-body { padding: 0.85rem 1rem; font-size: 0.8rem; color: #334155; display: none; border-top: 1px solid #e2e8f0; background: #ffffff; }
 
     @media print { .no-print { display: none !important; } }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
+    <!-- Header with 3-Language Selector on the Right -->
     <header style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; border-bottom:1px solid #fde68a; padding-bottom:1rem; margin-bottom:1.5rem; gap:0.75rem;">
       <div>
         <h1 class="heading-font" style="font-size:1.6rem; font-weight:700; color:#0f172a; letter-spacing:1px;">✦ ASTRO CLARITY ✦</h1>
-        <p style="font-size:0.75rem; color:#b45309; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
-          Placidus House System & Swiss Ephemeris Standard
+        <p id="lbl-subtitle" style="font-size:0.75rem; color:#b45309; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+          Placidus, D9 Navamsha, D10 Dashamsha & Swiss Ephemeris
         </p>
       </div>
       
       <div class="no-print" style="display:flex; gap:0.5rem; align-items:center;">
+        <!-- Language Switcher Dropdown -->
+        <div style="display:flex; align-items:center; background:#ffffff; border:1px solid #d97706; border-radius:0.75rem; padding:0.2rem 0.5rem;">
+          <span style="font-size:0.85rem; margin-right:0.25rem;">🌐</span>
+          <select id="lang-select" onchange="changeLanguage(this.value)" style="border:none; background:transparent; font-size:0.78rem; font-weight:700; color:#78350f; cursor:pointer; outline:none;">
+            <option value="ur">اردو (Urdu)</option>
+            <option value="en">English</option>
+            <option value="ar">العربية (Arabic)</option>
+          </select>
+        </div>
+
         <div style="background:#fef3c7; padding:0.25rem; border-radius:0.75rem; border:1px solid #fde68a; display:flex;">
           <button id="tab-natal-btn" class="btn-gold" style="padding:0.4rem 0.9rem; font-size:0.8rem;" onclick="switchTab('natal')">Birth Chart / کنڈلی</button>
           <button id="tab-horary-btn" style="background:transparent; color:#334155; border:none; padding:0.4rem 0.9rem; font-size:0.8rem; font-weight:600; cursor:pointer;" onclick="switchTab('horary')">Horary / سوالیہ</button>
@@ -60,12 +78,42 @@
       </div>
     </header>
 
+    <!-- WELCOME BULLETIN: 3 FREE QUESTIONS FROM D1, D9, D10 -->
+    <div id="welcome-bulletin-card" class="card no-print" style="background:#fffbeb; border:2px solid #f59e0b; margin-bottom:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #fde68a; padding-bottom:0.5rem; margin-bottom:0.75rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:1.3rem;">🎁</span>
+          <h3 id="lbl-bulletin-title" style="font-size:0.95rem; font-weight:800; color:#78350f;">نئے صارفین کے لیے تحفہ: 3 سوالات کے مفت فوری جوابات</h3>
+        </div>
+        <span id="free-q-counter" class="badge" style="background:#d97706; color:#ffffff;">3 سوالات باقی</span>
+      </div>
+      <p id="lbl-bulletin-desc" class="urdu-font" style="font-size:0.82rem; color:#451a03; margin-bottom:0.75rem;">
+        ہماری تیار کردہ 10 اہم سوالات کی لسٹ (D1, D9, D10) میں سے کوئی سے 3 سوالات منتخب کریں اور استخراج دیکھیں۔
+      </p>
+
+      <!-- 10 Questions Accordion -->
+      <div id="bulletin-questions-list"></div>
+
+      <!-- Paid Consultation Notice -->
+      <div style="background:#ffffff; border-radius:0.75rem; padding:0.85rem; border:1px solid #fde68a; margin-top:0.75rem; font-size:0.78rem;">
+        <p id="lbl-bulletin-notice" style="color:#78350f; font-weight:600; line-height:1.6;" class="urdu-font">
+          💎 <b>ضروری نوٹ:</b> اگر آپ ان سوالات کے جوابات کو اپنے تفصیلی زائچے (D1, D9, D10) اور کامل حل و وظائف کے ساتھ گہرائی میں ڈسکس کرنا چاہتے ہیں، تو ہمارے مستند نجومی سید فرخ حسن شاہ سے براہِ راست واٹس ایپ پر رابطہ فرمائیں (پیڈ فیسلٹی: 2,000 روپے فی سوال)۔
+        </p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-top:0.5rem; gap:0.5rem;">
+          <span style="font-family:monospace; font-weight:700; color:#0f172a;">JazzCash IBAN: PK78JCMA2608923005442230</span>
+          <button onclick="sendDirectWhatsAppConsult('تفصیلی نجومی مشاورت')" class="btn-green" style="padding:0.4rem 0.8rem; font-size:0.75rem;">
+            💬 واٹس ایپ پر رابطہ کریں (+923005442230)
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB 1: NATAL BIRTH CHART -->
     <div id="natal-section">
       <!-- Input Form (100% Blank by default for visitors) -->
       <div class="card no-print" style="margin-bottom:1.5rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem; margin-bottom:1rem;">
-          <h2 style="font-size:0.95rem; font-weight:700; color:#1e293b;">پیدائش کی تفصیلات (Enter Birth Details)</h2>
+          <h2 id="lbl-form-title" style="font-size:0.95rem; font-weight:700; color:#1e293b;">پیدائش کی تفصیلات (Enter Birth Details)</h2>
           <button id="admin-quick-load-btn" style="display:none; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; border-radius:0.5rem; padding:0.35rem 0.75rem; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="loadAdminExactKarachiChart()">
             ✦ Load My Chart (22 Jan 1975, Karachi)
           </button>
@@ -74,7 +122,7 @@
         <form id="natal-form" onsubmit="handleGenerate(event)">
           <div class="grid-4" style="margin-bottom:0.75rem;">
             <div>
-              <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">ملک (Country)</label>
+              <label id="lbl-country" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">ملک (Country)</label>
               <select id="country-select" class="input-field" onchange="updateCountry()">
                 <option value="Pakistan">Pakistan</option>
                 <option value="India">India</option>
@@ -84,7 +132,7 @@
               </select>
             </div>
             <div>
-              <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">صوبہ (State / Province)</label>
+              <label id="lbl-state" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">صوبہ (State / Province)</label>
               <select id="province-select" class="input-field" onchange="updateProvince()">
                 <option value="Sindh">Sindh</option>
                 <option value="Punjab">Punjab</option>
@@ -94,7 +142,7 @@
               </select>
             </div>
             <div>
-              <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">شہر (City)</label>
+              <label id="lbl-city" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">شہر (City)</label>
               <select id="city-select" class="input-field" style="font-weight:700; color:#92400e;" onchange="updateCity()">
                 <option value="Karachi">Karachi</option>
                 <option value="Hyderabad">Hyderabad</option>
@@ -103,7 +151,7 @@
               </select>
             </div>
             <div>
-              <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">نقاط (Lat / Long / TZ)</label>
+              <label id="lbl-coords" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">نقاط (Lat / Long / TZ)</label>
               <div style="display:flex; gap:0.25rem;">
                 <input id="coord-lat" type="text" readonly value="24.86°N" class="input-field" style="text-align:center; font-size:0.75rem; background:#f1f5f9;" />
                 <input id="coord-lng" type="text" readonly value="67.00°E" class="input-field" style="text-align:center; font-size:0.75rem; background:#f1f5f9;" />
@@ -114,11 +162,9 @@
 
           <div class="grid-4" style="margin-bottom:1rem;">
             <div>
-              <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">تاریخ پیدائش (Day / Month / Year)</label>
+              <label id="lbl-dob" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">تاریخ پیدائش (Day / Month / Year)</label>
               <div style="display:flex; gap:0.25rem;">
-                <select id="birth-day" class="input-field" style="font-weight:700;">
-                  <option value="">Day</option>
-                </select>
+                <select id="birth-day" class="input-field" style="font-weight:700;"><option value="">Day</option></select>
                 <select id="birth-month" class="input-field" style="font-weight:700;">
                   <option value="">Month</option>
                   <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
@@ -126,20 +172,14 @@
                   <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
                   <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                 </select>
-                <select id="birth-year" class="input-field" style="font-weight:700;">
-                  <option value="">Year</option>
-                </select>
+                <select id="birth-year" class="input-field" style="font-weight:700;"><option value="">Year</option></select>
               </div>
             </div>
             <div>
-              <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">وقت پیدائش (Hour / Min / AM-PM)</label>
+              <label id="lbl-time" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">وقت پیدائش (Hour / Min / AM-PM)</label>
               <div style="display:flex; gap:0.25rem;">
-                <select id="birth-hour" class="input-field" style="font-weight:700; text-align:center;">
-                  <option value="">Hr</option>
-                </select>
-                <select id="birth-min" class="input-field" style="font-weight:700; text-align:center;">
-                  <option value="">Min</option>
-                </select>
+                <select id="birth-hour" class="input-field" style="font-weight:700; text-align:center;"><option value="">Hr</option></select>
+                <select id="birth-min" class="input-field" style="font-weight:700; text-align:center;"><option value="">Min</option></select>
                 <select id="birth-ampm" class="input-field" style="font-weight:700; background:#fef3c7; color:#78350f; text-align:center;">
                   <option value="AM">AM</option>
                   <option value="PM">PM</option>
@@ -147,7 +187,7 @@
               </div>
             </div>
             <div style="grid-column: span 2; display:flex; align-items:flex-end;">
-              <button type="submit" class="btn-gold" style="width:100%; padding:0.65rem; font-size:0.9rem;">
+              <button type="submit" id="btn-generate" class="btn-gold" style="width:100%; padding:0.65rem; font-size:0.9rem;">
                 ✦ Generate Birth Chart (کنڈلی بنائیں)
               </button>
             </div>
@@ -158,19 +198,20 @@
       <!-- Blank Visitor Initial Placeholder -->
       <div id="chart-placeholder" class="card" style="text-align:center; padding:3.5rem 1rem; border:2px dashed #fde68a;">
         <div style="font-size:2.5rem; margin-bottom:0.75rem;">✨</div>
-        <h3 style="font-size:1.1rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem;">خوش آمدید! اپنی معلومات درج کریں</h3>
-        <p style="font-size:0.85rem; color:#64748b; max-width:440px; margin:0 auto;">
+        <h3 id="lbl-placeholder-title" style="font-size:1.1rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem;">خوش آمدید! اپنی معلومات درج کریں</h3>
+        <p id="lbl-placeholder-desc" style="font-size:0.85rem; color:#64748b; max-width:440px; margin:0 auto;">
           اوپر والے فارم میں تاریخ، وقت اور شہر درج کر کے <b style="color:#b45309;">"Generate Birth Chart"</b> کا بٹن دبائیں۔
         </p>
       </div>
 
-      <!-- Main Chart Output View (Hidden initially) -->
+      <!-- Main Chart Output View -->
       <div id="chart-output" style="display:none;" class="space-y-6">
-        <!-- View Switcher & Zoom -->
+        <!-- View Switcher (D1, D9, D10) & Zoom -->
         <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1rem; margin-bottom:1rem;">
-          <div style="display:flex; gap:0.5rem;">
-            <button id="view-d1-btn" class="btn-gold" style="padding:0.35rem 0.8rem; font-size:0.75rem;" onclick="switchChartView('D1')">D1 Placidus</button>
-            <button id="view-d9-btn" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.5rem; padding:0.35rem 0.8rem; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D9')">D9 Navamsha (نوانش)</button>
+          <div style="display:flex; gap:0.4rem;">
+            <button id="view-d1-btn" class="btn-gold" style="padding:0.35rem 0.75rem; font-size:0.75rem;" onclick="switchChartView('D1')">D1 Placidus</button>
+            <button id="view-d9-btn" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.5rem; padding:0.35rem 0.75rem; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D9')">D9 Navamsha (نوانش)</button>
+            <button id="view-d10-btn" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.5rem; padding:0.35rem 0.75rem; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D10')">D10 Dashamsha (دسامشا)</button>
           </div>
           <div class="no-print" style="display:flex; align-items:center; gap:0.35rem; font-size:0.8rem;">
             <span style="color:#64748b; font-weight:600;">Zoom:</span>
@@ -184,27 +225,27 @@
         <!-- Summary 4 Cards -->
         <div class="grid-4" style="margin-bottom:1rem; text-align:center;">
           <div class="card" style="background:#fef3c7; border:2px solid #f59e0b; padding:0.85rem;">
-            <div style="font-size:0.7rem; font-weight:700; color:#92400e;">طالع (Ascendant / 1st House)</div>
+            <div id="lbl-sum-asc" style="font-size:0.7rem; font-weight:700; color:#92400e;">طالع (Ascendant / 1st House)</div>
             <div id="asc-display" style="font-size:1.15rem; font-weight:800; color:#451a03; margin-top:0.2rem;">Taurus 13°39'</div>
             <div id="asc-d9-badge" style="font-size:0.65rem; color:#065f46; font-weight:700; margin-top:0.2rem;">D9: Taurus (Vargottama / ورگوتم)</div>
           </div>
           <div class="card" style="padding:0.85rem;">
-            <div style="font-size:0.7rem; font-weight:600; color:#64748b;">وسط السماء (MC / 10th House)</div>
+            <div id="lbl-sum-mc" style="font-size:0.7rem; font-weight:600; color:#64748b;">وسط السماء (MC / 10th House)</div>
             <div id="mc-display" style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-top:0.2rem;">Aquarius 0°35'</div>
           </div>
           <div class="card" style="padding:0.85rem;">
-            <div style="font-size:0.7rem; font-weight:600; color:#64748b;">برج قمر (Moon Sign)</div>
+            <div id="lbl-sum-moon" style="font-size:0.7rem; font-weight:600; color:#64748b;">برج قمر (Moon Sign)</div>
             <div id="moon-display" style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-top:0.2rem;">Taurus 17°13'</div>
           </div>
           <div class="card" style="padding:0.85rem;">
-            <div style="font-size:0.7rem; font-weight:600; color:#64748b;">برج شمس (Sun Sign)</div>
+            <div id="lbl-sum-sun" style="font-size:0.7rem; font-weight:600; color:#64748b;">برج شمس (Sun Sign)</div>
             <div id="sun-display" style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-top:0.2rem;">Aquarius 1°20'</div>
           </div>
         </div>
 
         <!-- SVG Dual Wheel Container -->
         <div class="card" style="text-align:center; padding:1.25rem 0.5rem; overflow:hidden; margin-bottom:1.5rem;">
-          <div style="font-size:0.75rem; color:#64748b; font-weight:600; margin-bottom:0.75rem;">
+          <div id="lbl-wheel-legend" style="font-size:0.75rem; color:#64748b; font-weight:600; margin-bottom:0.75rem;">
             <span style="display:inline-block; width:10px; height:10px; background:#1e293b; border-radius:50%; margin-right:4px;"></span> اندرونی دائرہ: پیدائشی سیارے (Natal) &nbsp;|&nbsp;
             <span style="display:inline-block; width:10px; height:10px; background:#d97706; border-radius:50%; margin-right:4px;"></span> بیرونی دائرہ: لائیو گوچر (Current Transits)
           </div>
@@ -213,18 +254,18 @@
           </div>
         </div>
 
-        <!-- Tables: Natal and Transits -->
+        <!-- Comprehensive Tables: Ascendant 1st Row + Nakshatras & Chiron -->
         <div class="grid-2">
           <!-- Natal Table -->
-          <div class="card">
-            <h3 style="font-size:0.85rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.5rem; display:flex; justify-content:space-between;">
-              <span>پیدائشی سیارے (Natal Planets)</span>
-              <span class="badge" style="background:#fef3c7; color:#92400e;">D1 & D9 Navamsha</span>
+          <div class="card" style="overflow-x:auto;">
+            <h3 id="lbl-natal-table-title" style="font-size:0.85rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.5rem; display:flex; justify-content:space-between;">
+              <span>پیدائشی سیارے و درجات (Natal & Nakshatras)</span>
+              <span class="badge" style="background:#fef3c7; color:#92400e;">D1, D9, D10</span>
             </h3>
             <table>
               <thead>
                 <tr>
-                  <th>Planet</th><th>Sign</th><th>Degree</th><th>D9</th><th>House</th><th>Motion (حالت)</th>
+                  <th>Body</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>Pada</th><th>NL</th><th>D9</th><th>D10</th><th>House</th><th>Motion</th>
                 </tr>
               </thead>
               <tbody id="natal-tbody"></tbody>
@@ -232,15 +273,15 @@
           </div>
 
           <!-- Current Transits Table -->
-          <div class="card">
-            <h3 style="font-size:0.85rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.5rem; display:flex; justify-content:space-between;">
+          <div class="card" style="overflow-x:auto;">
+            <h3 id="lbl-transit-table-title" style="font-size:0.85rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.5rem; display:flex; justify-content:space-between;">
               <span>موجودہ لائیو گوچر (Current Transits)</span>
               <span class="badge" style="background:#ecfdf5; color:#065f46;">Live Swiss Ephemeris</span>
             </h3>
             <table>
               <thead>
                 <tr>
-                  <th>Planet</th><th>Current Sign</th><th>Current Degree</th><th>Motion (حالت)</th>
+                  <th>Body</th><th>Current Sign</th><th>Degree</th><th>Nakshatra</th><th>Pada</th><th>NL</th><th>Motion</th>
                 </tr>
               </thead>
               <tbody id="transit-tbody"></tbody>
@@ -253,10 +294,10 @@
     <!-- TAB 2: HORARY ASTROLOGY (سوالیہ زائچہ) -->
     <div id="horary-section" style="display:none;">
       <div class="card" style="margin-bottom:1.5rem;">
-        <h2 style="font-size:1.05rem; font-weight:700; color:#1e293b; margin-bottom:0.75rem;">سوالیہ زائچہ (Horary Astrology / Prashna)</h2>
+        <h2 id="lbl-horary-title" style="font-size:1.05rem; font-weight:700; color:#1e293b; margin-bottom:0.75rem;">سوالیہ زائچہ (Horary Astrology / Prashna)</h2>
         
         <div style="margin-bottom:0.75rem;">
-          <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">سوال کا موضوع (Question Category)</label>
+          <label id="lbl-horary-cat" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">سوال کا موضوع (Question Category)</label>
           <select id="horary-category" class="input-field" style="font-weight:700; color:#78350f;">
             <option value="marriage">شادی، نکاح و رشتہ (Marriage & Partnership - 7th & 2nd House, Venus)</option>
             <option value="career">کیریئر، نوکری و کاروبار (Career & Job - 10th & 6th House, Sun, Saturn)</option>
@@ -268,16 +309,16 @@
         </div>
 
         <div style="margin-bottom:0.75rem;">
-          <label style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">اپنا سوال لکھیں (Enter Question)</label>
+          <label id="lbl-horary-input" style="font-size:0.75rem; font-weight:600; color:#475569; display:block; margin-bottom:0.25rem;">اپنا سوال لکھیں (Enter Question)</label>
           <textarea id="horary-text" rows="3" class="input-field" placeholder="مثال: کیا میرے رشتے کی بات پکی ہو جائے گی؟ یا کیا نوکری کا انٹرویو کامیاب رہے گا؟"></textarea>
         </div>
 
-        <button class="btn-gold" style="font-size:0.85rem;" onclick="castHorary()">استخراج کریں (Cast Horary)</button>
+        <button class="btn-gold" id="btn-cast-horary" style="font-size:0.85rem;" onclick="castHorary()">استخراج کریں (Cast Horary)</button>
       </div>
 
       <!-- Horary Result Display -->
       <div id="horary-output" style="display:none;" class="space-y-4">
-        <!-- 1. VISITOR VIEW (1 Paragraph + Official JazzCash IBAN Payment Card) -->
+        <!-- VISITOR VIEW -->
         <div class="card" style="background:#fef3c7; border:2px solid #f59e0b; margin-bottom:1rem;">
           <div style="display:flex; justify-content:space-between; border-bottom:1px solid #fde68a; padding-bottom:0.5rem; margin-bottom:0.5rem;">
             <div>
@@ -291,7 +332,7 @@
             User verdict description
           </p>
 
-          <!-- OFFICIAL JAZZCASH & WHATSAPP CARD -->
+          <!-- JAZZCASH & WHATSAPP CARD -->
           <div style="background:#ffffff; border:2px solid #d97706; border-radius:0.75rem; padding:1rem;">
             <div style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; font-weight:700; color:#451a03; margin-bottom:0.5rem;">
               <span>💎</span> <h4>ذاتی ماہرانہ مشاورت و حل (Fee: Rs. 2,000 per question)</h4>
@@ -325,7 +366,7 @@
           </div>
         </div>
 
-        <!-- 2. ADMIN ONLY TECHNICAL BREAKDOWN (Secret View) -->
+        <!-- ADMIN ONLY BREAKDOWN -->
         <div id="horary-admin-card" class="card" style="display:none; background:#0f172a; color:#f8fafc; border:2px solid #10b981;">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:0.5rem; margin-bottom:0.75rem;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -377,762 +418,133 @@
 
   <script>
     /* ========================================================================== */
-    /* NATIVE JAVASCRIPT LOGIC (NO BABEL, NO REACT CDN, 100% BULLETPROOF)         */
+    /* MULTI-LANGUAGE DICTIONARY (URDU, ENGLISH, ARABIC)                          */
     /* ========================================================================== */
+    let currentLang = "ur";
 
-    const ASTRO_PROFILE = {
-      phone: "+923005442230",
-      whatsappNumber: "923005442230",
-      jazzCashIban: "PK78JCMA2608923005442230"
-    };
-
-    const CITIES_DB = {
-      Pakistan: {
-        Sindh: [
-          { name: "Karachi", lat: 24.8607, lng: 67.0011, tz: 5 },
-          { name: "Hyderabad", lat: 25.3960, lng: 68.3578, tz: 5 },
-          { name: "Sukkur", lat: 27.7052, lng: 68.8574, tz: 5 },
-          { name: "Larkana", lat: 27.5590, lng: 68.2120, tz: 5 }
-        ],
-        Punjab: [
-          { name: "Lahore", lat: 31.5204, lng: 74.3587, tz: 5 },
-          { name: "Rawalpindi", lat: 33.5651, lng: 73.0169, tz: 5 },
-          { name: "Faisalabad", lat: 31.4504, lng: 73.1350, tz: 5 },
-          { name: "Multan", lat: 30.1575, lng: 71.5249, tz: 5 }
-        ],
-        Islamabad: [{ name: "Islamabad", lat: 33.6844, lng: 73.0479, tz: 5 }],
-        KPK: [{ name: "Peshawar", lat: 34.0151, lng: 71.5249, tz: 5 }],
-        Balochistan: [{ name: "Quetta", lat: 30.1798, lng: 66.9750, tz: 5 }]
+    const TRANSLATIONS = {
+      ur: {
+        subtitle: "Placidus, D9 Navamsha, D10 Dashamsha & Swiss Ephemeris",
+        tabNatal: "Birth Chart / کنڈلی",
+        tabHorary: "Horary / سوالیہ",
+        bulletinTitle: "نئے صارفین کے لیے تحفہ: 3 سوالات کے مفت فوری جوابات",
+        bulletinDesc: "ہماری تیار کردہ 10 اہم سوالات کی لسٹ (D1, D9, D10) میں سے کوئی سے 3 سوالات منتخب کریں اور استخراج دیکھیں۔",
+        bulletinNotice: "💎 ضروری نوٹ: اگر آپ ان سوالات کے جوابات کو اپنے تفصیلی زائچے (D1, D9, D10) اور کامل حل و وظائف کے ساتھ گہرائی میں ڈسکس کرنا چاہتے ہیں، تو ہمارے مستند نجومی سید فرخ حسن شاہ سے براہِ راست واٹس ایپ پر رابطہ فرمائیں (پیڈ فیسلٹی: 2,000 روپے فی سوال)۔",
+        formTitle: "پیدائش کی تفصیلات (Enter Birth Details)",
+        country: "ملک (Country)",
+        state: "صوبہ (State / Province)",
+        city: "شہر (City)",
+        coords: "نقاط (Lat / Long / TZ)",
+        dob: "تاریخ پیدائش (Day / Month / Year)",
+        time: "وقت پیدائش (Hour / Min / AM-PM)",
+        btnGenerate: "✦ Generate Birth Chart (کنڈلی بنائیں)",
+        placeholderTitle: "خوش آمدید! اپنی معلومات درج کریں",
+        placeholderDesc: "اوپر والے فارم میں تاریخ، وقت اور شہر درج کر کے \"Generate Birth Chart\" کا بٹن دبائیں۔",
+        sumAsc: "طالع (Ascendant / 1st House)",
+        sumMc: "وسط السماء (MC / 10th House)",
+        sumMoon: "برج قمر (Moon Sign)",
+        sumSun: "برج شمس (Sun Sign)",
+        natalTableTitle: "پیدائشی سیارے و درجات (Natal & Nakshatras)",
+        transitTableTitle: "موجودہ لائیو گوچر (Current Transits)",
+        horaryTitle: "سوالیہ زائچہ (Horary Astrology / Prashna)",
+        horaryCat: "سوال کا موضوع (Question Category)",
+        horaryInput: "اپنا سوال لکھیں (Enter Question)",
+        btnCastHorary: "استخراج کریں (Cast Horary)"
       },
-      India: {
-        Maharashtra: [{ name: "Mumbai", lat: 18.9220, lng: 72.8347, tz: 5.5 }],
-        Delhi: [{ name: "New Delhi", lat: 28.6139, lng: 77.2090, tz: 5.5 }]
+      en: {
+        subtitle: "Placidus, D9 Navamsha, D10 Dashamsha & Swiss Ephemeris",
+        tabNatal: "Birth Chart",
+        tabHorary: "Horary Astrology",
+        bulletinTitle: "Welcome Gift: 3 Free Instant Answers from 10 Questions",
+        bulletinDesc: "Select up to 3 questions from our curated astrological list (D1, D9, D10) for immediate answers.",
+        bulletinNotice: "💎 Important Note: To discuss these answers deeply with your personalized D1, D9, D10 birth chart and complete astrological remedies, contact Astrologer Syed Farrukh Hassan Shah via WhatsApp (Paid facility: Rs. 2,000 per question).",
+        formTitle: "Enter Birth Details",
+        country: "Country",
+        state: "State / Province",
+        city: "City",
+        coords: "Coordinates (Lat / Long / TZ)",
+        dob: "Date of Birth (Day / Month / Year)",
+        time: "Birth Time (Hour / Min / AM-PM)",
+        btnGenerate: "✦ Generate Birth Chart",
+        placeholderTitle: "Welcome! Enter Your Birth Information",
+        placeholderDesc: "Fill in your date of birth, time, and location above, then click \"Generate Birth Chart\".",
+        sumAsc: "Ascendant (1st House)",
+        sumMc: "Midheaven (MC / 10th House)",
+        sumMoon: "Moon Sign",
+        sumSun: "Sun Sign",
+        natalTableTitle: "Natal Planetary Positions & Nakshatras",
+        transitTableTitle: "Current Live Transits",
+        horaryTitle: "Horary Astrology (Prashna)",
+        horaryCat: "Question Category",
+        horaryInput: "Type Your Question",
+        btnCastHorary: "Cast Horary Chart"
       },
-      UK: { England: [{ name: "London", lat: 51.5074, lng: -0.1278, tz: 0 }] },
-      UAE: { Dubai: [{ name: "Dubai", lat: 25.2048, lng: 55.2708, tz: 4 }] },
-      Saudi_Arabia: { Makkah: [{ name: "Makkah", lat: 21.3891, lng: 39.8579, tz: 3 }] }
-    };
-
-    const ZODIAC_SIGNS = [
-      { name: "Aries", ur: "حمل", symbol: "♈", bg: "#fee2e2", border: "#ef4444", text: "#b91c1c", ruler: "Mars" },
-      { name: "Taurus", ur: "ثور", symbol: "♉", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Venus" },
-      { name: "Gemini", ur: "جوزا", symbol: "♊", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Mercury" },
-      { name: "Cancer", ur: "سرطان", symbol: "♋", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Moon" },
-      { name: "Leo", ur: "اسد", symbol: "♌", bg: "#fee2e2", border: "#ef4444", text: "#b91c1c", ruler: "Sun" },
-      { name: "Virgo", ur: "سنبلہ", symbol: "♍", element: "earth", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Mercury" },
-      { name: "Libra", ur: "میزان", symbol: "♎", element: "air", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Venus" },
-      { name: "Scorpio", ur: "عقرب", symbol: "♏", element: "water", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Mars" },
-      { name: "Sagittarius", ur: "قوس", symbol: "♐", element: "fire", bg: "#fee2e2", border: "#ef4444", text: "#b91c1c", ruler: "Jupiter" },
-      { name: "Capricorn", ur: "جدی", symbol: "♑", element: "earth", bg: "#d1fae5", border: "#10b981", text: "#047857", ruler: "Saturn" },
-      { name: "Aquarius", ur: "دلو", symbol: "♒", element: "air", bg: "#fef3c7", border: "#f59e0b", text: "#b45309", ruler: "Saturn" },
-      { name: "Pisces", ur: "حوت", symbol: "♓", element: "water", bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8", ruler: "Jupiter" }
-    ];
-
-    const PLANET_METADATA = [
-      { id: "Sun", abbrev: "Su", ur: "شمس", symbol: "☉", color: "#d97706" },
-      { id: "Moon", abbrev: "Mo", ur: "قمر", symbol: "☽", color: "#475569" },
-      { id: "Mercury", abbrev: "Me", ur: "عطارد", symbol: "☿", color: "#059669" },
-      { id: "Venus", abbrev: "Ve", ur: "زہرہ", symbol: "♀", color: "#db2777" },
-      { id: "Mars", abbrev: "Ma", ur: "مریخ", symbol: "♂", color: "#dc2626" },
-      { id: "Jupiter", abbrev: "Ju", ur: "مشتری", symbol: "♃", color: "#7c3aed" },
-      { id: "Saturn", abbrev: "Sat", ur: "زحل", symbol: "♄", color: "#1e293b" },
-      { id: "Uranus", abbrev: "Ur", ur: "یورینس", symbol: "♅", color: "#0284c7" },
-      { id: "Neptune", abbrev: "Ne", ur: "نیپچون", symbol: "♆", color: "#2563eb" },
-      { id: "Pluto", abbrev: "Pl", ur: "پلوٹو", symbol: "♇", color: "#475569" },
-      { id: "Rahu", abbrev: "Ra", ur: "راہو", symbol: "☊", color: "#64748b" },
-      { id: "Ketu", abbrev: "Ke", ur: "کیتو", symbol: "☋", color: "#64748b" }
-    ];
-
-    const HORARY_TOPICS = {
-      marriage: {
-        title: "شادی، نکاح و رشتہ (Marriage & Partnership)",
-        houses: [7, 2, 1],
-        karakas: ["Venus", "Moon", "Rahu"],
-        desc: "ساتویں گھر (شراکت و نکاح) اور زہرہ کے موافق اثرات کے مطابق بات چیت میں سنجیدگی آ سکتی ہے۔ مکمل مطابقت اور حتمی فیصلے کے لیے واٹس ایپ پر فیس منتقل کر کے رہنمائی حاصل کریں۔"
-      },
-      career: {
-        title: "کیریئر، نوکری و کاروبار (Career & Job)",
-        houses: [10, 6, 2],
-        karakas: ["Sun", "Saturn", "Jupiter"],
-        desc: "دسویں گھر (مقام و مرتبہ) اور شمس کے اثرات کے مطابق کیریئر میں اچھے مواقع ملیں گے۔ تفصیلی حساب کتاب کے لیے واٹس ایپ پر رابطہ کریں۔"
-      },
-      health: {
-        title: "صحت، شفا و بیماری (Health & Recovery)",
-        houses: [1, 6, 8],
-        karakas: ["Sun", "Moon", "Mars"],
-        desc: "پہلا گھر (جسمانی طاقت) اور چھٹا گھر بیماری کو ظاہر کرتے ہیں۔ وقتی احتیاط کے بعد صحت میں بتدریج بہتری کے آثار ہیں۔"
-      },
-      travel: {
-        title: "سفر، ویزا و بیرون ملک (Travel & Foreign Visa)",
-        houses: [9, 12, 3],
-        karakas: ["Jupiter", "Moon"],
-        desc: "نویں گھر (طویل سفر و ویزا) کے مطابق سفر کے کاغذات میں پیش رفت ممکن ہے، صدقہ و استخارہ جاری رکھیں۔"
-      },
-      finance: {
-        title: "مال، منافع و جائیداد (Wealth & Property)",
-        houses: [2, 11, 4],
-        karakas: ["Jupiter", "Mercury", "Mars"],
-        desc: "دوسرے اور گیارہویں گھر کے مطابق مالی معاملات میں بہتری اور رکے ہوئے فنڈز کے نکلنے کے اچھے اشارے ہیں۔"
-      },
-      general: {
-        title: "عام سوال / دیگر معاملات (General Query)",
-        houses: [1, 10, 11],
-        karakas: ["Moon", "Jupiter"],
-        desc: "سوال کے وقت طالع اور قمر کے نظرات کے مطابق معاملہ حل کی طرف بڑھے گا۔ گہری ذاتی رہنمائی کے لیے واٹس ایپ پر رابطہ کریں۔"
+      ar: {
+        subtitle: "نظام بلاسيدوس، نافامشا D9، داشامشا D10 والدقة الفلكية السويسرية",
+        tabNatal: "خارطة المولد / الكوندلي",
+        tabHorary: "علم المسائل (السؤال الفلكي)",
+        bulletinTitle: "هدية للمستخدمين الجدد: 3 إجابات فورية مجانية من 10 أسئلة",
+        bulletinDesc: "اختر ما يصل إلى 3 أسئلة من قائمتنا الفلكية المعتمدة للحصول على إجابات فورية.",
+        bulletinNotice: "💎 ملاحظة هامة: لمناقشة هذه الإجابات بالتفصيل مع الخارطة الكاملة والعلاجات الفلكية، تواصل مباشرة مع الفلكي سيد فرخ حسن شاه عبر واتساب (الخدمة المدفوعة: 2,000 روبية لكل سؤال).",
+        formTitle: "تفاصيل الولادة",
+        country: "الدولة",
+        state: "المحافظة / الإقليم",
+        city: "المدينة",
+        coords: "الإحداثيات والتوقيت",
+        dob: "تاريخ الميلاد (يوم / شهر / سنة)",
+        time: "وقت الولادة (ساعة / دقيقة)",
+        btnGenerate: "✦ استخراج الخارطة الفلكية",
+        placeholderTitle: "أهلاً وسهلاً! أدخل بيانات الولادة",
+        placeholderDesc: "أدخل تاريخ ووقت ومكان الولادة أعلاه، ثم اضغط على زر استخراج الخارطة.",
+        sumAsc: "الطالع (البيت الأول)",
+        sumMc: "وسط السماء (البيت العاشر)",
+        sumMoon: "برج القمر",
+        sumSun: "برج الشمس",
+        natalTableTitle: "مواقع الكواكب والمنازل القمرية",
+        transitTableTitle: "العبور الفلكي المباشر",
+        horaryTitle: "علم المسائل الفلكي (الهوراري)",
+        horaryCat: "نوع السؤال الفلكي",
+        horaryInput: "اكتب سؤالك هنا",
+        btnCastHorary: "استخراج الخارطة الساعية"
       }
     };
 
-    // Global App State
-    let isAdminActive = false;
-    let currentChartView = "D1";
-    let currentZoom = 1.0;
-    let currentNatalChart = null;
-    let currentLiveTransits = [];
-    let lastHoraryResult = null;
-
-    // Populate Dropdowns on Window Load
-    window.addEventListener("DOMContentLoaded", () => {
-      const daySel = document.getElementById("birth-day");
-      for (let i = 1; i <= 31; i++) {
-        const opt = document.createElement("option");
-        opt.value = i; opt.textContent = i;
-        daySel.appendChild(opt);
-      }
-
-      const yearSel = document.getElementById("birth-year");
-      for (let i = 2025; i >= 1935; i--) {
-        const opt = document.createElement("option");
-        opt.value = i; opt.textContent = i;
-        yearSel.appendChild(opt);
-      }
-
-      const hrSel = document.getElementById("birth-hour");
-      for (let i = 1; i <= 12; i++) {
-        const opt = document.createElement("option");
-        opt.value = i; opt.textContent = i < 10 ? "0" + i : i;
-        hrSel.appendChild(opt);
-      }
-
-      const minSel = document.getElementById("birth-min");
-      for (let i = 0; i < 60; i++) {
-        const opt = document.createElement("option");
-        opt.value = i; opt.textContent = i < 10 ? "0" + i : i;
-        minSel.appendChild(opt);
-      }
-
-      // Compute Live Transits Immediately
-      computeLiveTransits();
-    });
-
-    /* GEOCENTRIC ASTRONOMICAL ENGINE WITH PRECISE RETROGRADE DETECTION */
-    function calculateChartData(utcDate, lat, lng) {
-      const timeMs = utcDate.getTime();
-      const jd = (timeMs / 86400000.0) + 2440587.5;
-      const d = jd - 2451545.0;
-      const T = d / 36525.0;
-
-      // Sidereal Time
-      let gmst = 280.46061837 + 360.98564736629 * d + 0.000387933 * T * T;
-      gmst = ((gmst % 360) + 360) % 360;
-
-      if (window.Astronomy && Astronomy.SiderealTime) {
-        try {
-          const aTime = Astronomy.MakeTime(utcDate);
-          gmst = (Astronomy.SiderealTime(aTime) * 15) % 360;
-        } catch(e) {}
-      }
-
-      const ramc = ((gmst + lng) % 360 + 360) % 360;
-      const ramcRad = ramc * Math.PI / 180;
-
-      const epsDeg = 23.4392911 - 0.0130042 * T;
-      const epsRad = epsDeg * Math.PI / 180;
-      const latRad = lat * Math.PI / 180;
-
-      // Midheaven (MC)
-      let mcLon = Math.atan2(Math.sin(ramcRad), Math.cos(ramcRad) * Math.cos(epsRad)) * (180 / Math.PI);
-      mcLon = ((mcLon % 360) + 360) % 360;
-
-      // Ascendant (ASC) - Exact Horizon Formula
-      const ascY = Math.cos(ramcRad);
-      const ascX = -(Math.sin(epsRad) * Math.tan(latRad) + Math.cos(epsRad) * Math.sin(ramcRad));
-      let ascLon = Math.atan2(ascY, ascX) * (180 / Math.PI);
-      ascLon = ((ascLon % 360) + 360) % 360;
-
-      // Placidus Cusps
-      const cusps = computePlacidus(ramc, ascLon, mcLon, lat, epsDeg);
-
-      // Planets Longitudes & Mathematical Retrograde Verification
-      const planets = [];
-      const hasAstro = (window.Astronomy && Astronomy.GeoVector);
-
-      PLANET_METADATA.forEach(meta => {
-        let lon = 0;
-        let isRetro = false;
-
-        // Rahu & Ketu are ALWAYS Retrograde in standard mean motion
-        if (meta.id === "Rahu" || meta.id === "Ketu") {
-          const omega = ((125.04452 - 1934.136261 * T) % 360 + 360) % 360;
-          lon = meta.id === "Rahu" ? omega : (omega + 180) % 360;
-          isRetro = true;
-        } else if (hasAstro) {
-          try {
-            const aTime = Astronomy.MakeTime(utcDate);
-            const gVec = Astronomy.GeoVector(meta.id, aTime, true);
-            const ecl = Astronomy.Ecliptic(gVec);
-            lon = ((ecl.elon % 360) + 360) % 360;
-
-            // Accurate 24-Hour Difference for Retrograde Verification (±12 Hours Baseline)
-            if (meta.id !== "Sun" && meta.id !== "Moon") {
-              const t1 = Astronomy.MakeTime(new Date(utcDate.getTime() - 12 * 3600000));
-              const t2 = Astronomy.MakeTime(new Date(utcDate.getTime() + 12 * 3600000));
-              const gv1 = Astronomy.GeoVector(meta.id, t1, true);
-              const gv2 = Astronomy.GeoVector(meta.id, t2, true);
-              let diff = Astronomy.Ecliptic(gv2).elon - Astronomy.Ecliptic(gv1).elon;
-              if (diff > 180) diff -= 360;
-              if (diff < -180) diff += 360;
-              if (diff < 0) isRetro = true;
-            }
-          } catch(e) {
-            lon = getAnalyticalLon(meta.id, d);
-          }
-        } else {
-          lon = getAnalyticalLon(meta.id, d);
-        }
-
-        const signIndex = Math.floor(lon / 30) % 12;
-        const degInSign = lon % 30;
-        const deg = Math.floor(degInSign);
-        const min = Math.floor((degInSign - deg) * 60);
-
-        // D9 Navamsha Pada
-        const pada = Math.floor(degInSign / 3.33333333);
-        let startSign = 0;
-        if (signIndex % 4 === 0) startSign = 0;      // Fire -> Aries
-        else if (signIndex % 4 === 1) startSign = 9; // Earth -> Capricorn
-        else if (signIndex % 4 === 2) startSign = 6; // Air -> Libra
-        else if (signIndex % 4 === 3) startSign = 3; // Water -> Cancer
-        const d9SignIndex = (startSign + pada) % 12;
-        const d9Deg = Math.floor(((degInSign % 3.33333333) / 3.33333333) * 30);
-
-        const houseNum = getHouse(lon, cusps);
-
-        planets.push({
-          ...meta,
-          longitude: lon,
-          signIndex,
-          signName: ZODIAC_SIGNS[signIndex].name,
-          signUr: ZODIAC_SIGNS[signIndex].ur,
-          formatted: `${deg}°${min < 10 ? '0' + min : min}'`,
-          isRetro,
-          d9SignIndex,
-          d9SignName: ZODIAC_SIGNS[d9SignIndex].name,
-          d9Deg,
-          houseNum
-        });
-      });
-
-      const ascSignIdx = Math.floor(ascLon / 30) % 12;
-      const ascDegInSign = ascLon % 30;
-      const ascDeg = Math.floor(ascDegInSign);
-      const ascMin = Math.floor((ascDegInSign - ascDeg) * 60);
-
-      const ascPada = Math.floor(ascDegInSign / 3.33333333);
-      let ascStartSign = 0;
-      if (ascSignIdx % 4 === 0) ascStartSign = 0;
-      else if (ascSignIdx % 4 === 1) ascStartSign = 9;
-      else if (ascSignIdx % 4 === 2) ascStartSign = 6;
-      else if (ascSignIdx % 4 === 3) ascStartSign = 3;
-      const d9AscSignIdx = (ascStartSign + ascPada) % 12;
-
-      const mcSignIdx = Math.floor(mcLon / 30) % 12;
-      const mcDegInSign = mcLon % 30;
-
-      return {
-        ascendant: {
-          longitude: ascLon,
-          signIndex: ascSignIdx,
-          signName: ZODIAC_SIGNS[ascSignIdx].name,
-          signUr: ZODIAC_SIGNS[ascSignIdx].ur,
-          formatted: `${ascDeg}°${ascMin < 10 ? '0' + ascMin : ascMin}'`,
-          d9SignName: ZODIAC_SIGNS[d9AscSignIdx].name,
-          isVargottama: ascSignIdx === d9AscSignIdx
-        },
-        midheaven: {
-          longitude: mcLon,
-          signName: ZODIAC_SIGNS[mcSignIdx].name,
-          formatted: `${Math.floor(mcDegInSign)}°${Math.floor((mcDegInSign % 1) * 60)}'`
-        },
-        cusps,
-        planets
-      };
-    }
-
-    function computePlacidus(ramc, asc, mc, lat, eps) {
-      const cusps = new Array(13).fill(0);
-      cusps[1] = asc;
-      cusps[10] = mc;
-      cusps[7] = (asc + 180) % 360;
-      cusps[4] = (mc + 180) % 360;
-
-      const calcCusp = (rOffset, factor, isAbove) => {
-        const phi = lat * Math.PI / 180;
-        const e = eps * Math.PI / 180;
-        let ra = (ramc + rOffset) * Math.PI / 180;
-        for (let i = 0; i < 8; i++) {
-          const sinD = Math.sin(e) * Math.sin(ra);
-          const tanD = sinD / Math.sqrt(Math.max(0.0001, 1 - sinD * sinD));
-          const ad = Math.asin(Math.max(-0.999, Math.min(0.999, Math.tan(phi) * tanD)));
-          const target = (ramc * Math.PI / 180) + (isAbove ? 1 : -1) * (factor * (Math.PI / 2 + ad));
-          ra = (ra + target) / 2;
-        }
-        let l = Math.atan2(Math.sin(ra) / Math.cos(e), Math.cos(ra)) * (180 / Math.PI);
-        return ((l % 360) + 360) % 360;
-      };
-
-      cusps[11] = calcCusp(30, 1/3, true);
-      cusps[12] = calcCusp(60, 2/3, true);
-      cusps[2] = calcCusp(120, 2/3, false);
-      cusps[3] = calcCusp(150, 1/3, false);
-
-      cusps[5] = (cusps[11] + 180) % 360;
-      cusps[6] = (cusps[12] + 180) % 360;
-      cusps[8] = (cusps[2] + 180) % 360;
-      cusps[9] = (cusps[3] + 180) % 360;
-
-      return cusps;
-    }
-
-    function getHouse(lon, cusps) {
-      for (let h = 1; h <= 12; h++) {
-        const nextH = h === 12 ? 1 : h + 1;
-        let start = cusps[h];
-        let end = cusps[nextH];
-        if (start < end) {
-          if (lon >= start && lon < end) return h;
-        } else {
-          if (lon >= start || lon < end) return h;
-        }
-      }
-      return 1;
-    }
-
-    function getAnalyticalLon(id, d) {
-      const base = {
-        Sun: 280.466 + 0.9856474 * d,
-        Moon: 218.316 + 13.176396 * d,
-        Mercury: 252.25 + 4.092334 * d,
-        Venus: 181.98 + 1.602130 * d,
-        Mars: 355.43 + 0.524033 * d,
-        Jupiter: 34.35 + 0.083085 * d,
-        Saturn: 50.08 + 0.033444 * d,
-        Uranus: 314.05 + 0.011728 * d,
-        Neptune: 304.35 + 0.005981 * d,
-        Pluto: 238.96 + 0.00397 * d
-      };
-      return ((base[id] || 0) % 360 + 360) % 360;
-    }
-
-    function computeLiveTransits() {
-      const now = new Date();
-      const res = calculateChartData(now, 24.8607, 67.0011);
-      if (res) {
-        currentLiveTransits = res.planets;
-        renderTransitTable(res.planets);
-      }
-    }
-
-    /* FORM HANDLERS */
-    function updateCountry() {
-      const c = document.getElementById("country-select").value;
-      const provSel = document.getElementById("province-select");
-      provSel.innerHTML = "";
-      Object.keys(CITIES_DB[c] || {}).forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p; opt.textContent = p;
-        provSel.appendChild(opt);
-      });
-      updateProvince();
-    }
-
-    function updateProvince() {
-      const c = document.getElementById("country-select").value;
-      const p = document.getElementById("province-select").value;
-      const citySel = document.getElementById("city-select");
-      citySel.innerHTML = "";
-      (CITIES_DB[c]?.[p] || []).forEach(city => {
-        const opt = document.createElement("option");
-        opt.value = city.name; opt.textContent = city.name;
-        citySel.appendChild(opt);
-      });
-      updateCity();
-    }
-
-    function updateCity() {
-      const c = document.getElementById("country-select").value;
-      const p = document.getElementById("province-select").value;
-      const cityName = document.getElementById("city-select").value;
-      const found = (CITIES_DB[c]?.[p] || []).find(item => item.name === cityName);
-      if (found) {
-        document.getElementById("coord-lat").value = found.lat + "°N";
-        document.getElementById("coord-lng").value = found.lng + "°E";
-        document.getElementById("coord-tz").value = "UTC+" + found.tz;
-      }
-    }
-
-    function handleGenerate(e) {
-      if (e) e.preventDefault();
-      const day = document.getElementById("birth-day").value;
-      const month = document.getElementById("birth-month").value;
-      const year = document.getElementById("birth-year").value;
-      const hour = document.getElementById("birth-hour").value;
-      const min = document.getElementById("birth-min").value;
-      const ampm = document.getElementById("birth-ampm").value;
-
-      if (!day || !month || !year || !hour || min === "") {
-        alert("برائے مہربانی تاریخ اور وقت کے تمام خانے پُر کریں۔");
-        return;
-      }
-
-      let h = parseInt(hour);
-      if (ampm === "PM" && h < 12) h += 12;
-      if (ampm === "AM" && h === 12) h = 0;
-
-      const c = document.getElementById("country-select").value;
-      const p = document.getElementById("province-select").value;
-      const cityName = document.getElementById("city-select").value;
-      const cityData = (CITIES_DB[c]?.[p] || []).find(i => i.name === cityName) || { lat: 24.8607, lng: 67.0011, tz: 5 };
-
-      const utc = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), h - cityData.tz, Number(min)));
-      const res = calculateChartData(utc, cityData.lat, cityData.lng);
-      if (res) {
-        currentNatalChart = res;
-        renderNatalView(res);
-      }
-    }
-
-    function loadAdminExactKarachiChart() {
-      document.getElementById("country-select").value = "Pakistan";
-      updateCountry();
-      document.getElementById("province-select").value = "Sindh";
-      updateProvince();
-      document.getElementById("city-select").value = "Karachi";
-      updateCity();
-
-      document.getElementById("birth-day").value = "22";
-      document.getElementById("birth-month").value = "1";
-      document.getElementById("birth-year").value = "1975";
-      document.getElementById("birth-hour").value = "12";
-      document.getElementById("birth-min").value = "42";
-      document.getElementById("birth-ampm").value = "PM";
-
-      const utc = new Date(Date.UTC(1975, 0, 22, 12 - 5, 42));
-      const res = calculateChartData(utc, 24.8607, 67.0011);
-      if (res) {
-        currentNatalChart = res;
-        renderNatalView(res);
-      }
-    }
-
-    /* RENDER CHART & SVG */
-    function renderNatalView(data) {
-      document.getElementById("chart-placeholder").style.display = "none";
-      document.getElementById("chart-output").style.display = "block";
-
-      document.getElementById("asc-display").textContent = `${data.ascendant.signName} (${data.ascendant.signUr}) ${data.ascendant.formatted}`;
-      document.getElementById("asc-d9-badge").textContent = `D9: ${data.ascendant.d9SignName} ${data.ascendant.isVargottama ? '(Vargottama / ورگوتم)' : ''}`;
-      document.getElementById("mc-display").textContent = `${data.midheaven.signName} ${data.midheaven.formatted}`;
-
-      const moon = data.planets.find(p => p.id === "Moon");
-      const sun = data.planets.find(p => p.id === "Sun");
-      if (moon) document.getElementById("moon-display").textContent = `${moon.signName} ${moon.formatted}`;
-      if (sun) document.getElementById("sun-display").textContent = `${sun.signName} ${sun.formatted}`;
-
-      renderNatalTable(data.planets);
-      renderWheel(data);
-    }
-
-    function renderNatalTable(planets) {
-      const tbody = document.getElementById("natal-tbody");
-      tbody.innerHTML = "";
-      planets.forEach(p => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td style="font-weight:bold; color:${p.color};">${p.symbol} ${p.abbrev}</td>
-          <td>${p.signName} (${p.signUr})</td>
-          <td style="font-family:monospace; font-weight:700;">${p.formatted}</td>
-          <td style="font-family:monospace; color:#64748b;">${p.d9SignName} ${p.d9Deg}°</td>
-          <td style="font-weight:700; color:#334155;">H${p.houseNum}</td>
-          <td>${p.isRetro ? '<span class="retro-tag">(R) رجعت</span>' : '<span class="dir-tag">مستقیم Dir</span>'}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderTransitTable(planets) {
-      const tbody = document.getElementById("transit-tbody");
-      tbody.innerHTML = "";
-      planets.forEach(p => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td style="font-weight:bold; color:${p.color};">${p.symbol} ${p.abbrev}</td>
-          <td>${p.signName} (${p.signUr})</td>
-          <td style="font-family:monospace; font-weight:700;">${p.formatted}</td>
-          <td>${p.isRetro ? '<span class="retro-tag">(R) رجعت</span>' : '<span class="dir-tag">مستقیم Dir</span>'}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderWheel(data) {
-      const svg = document.getElementById("astro-wheel-svg");
-      const size = 540;
-      const center = size / 2;
-      const rOuter = 250, rSigns = 215, rTransits = 175, rNatal = 120, rInner = 65;
-
-      const ascLon = data.ascendant.longitude;
-
-      const getCoords = (lon, radius) => {
-        const deltaDeg = (lon - ascLon + 360) % 360;
-        const rad = deltaDeg * (Math.PI / 180);
-        return {
-          x: center - radius * Math.cos(rad),
-          y: center + radius * Math.sin(rad)
-        };
-      };
-
-      const describeArc = (startDeg, endDeg, rIn, rOut) => {
-        const p1 = getCoords(startDeg, rOut);
-        const p2 = getCoords(endDeg, rOut);
-        const p3 = getCoords(endDeg, rIn);
-        const p4 = getCoords(startDeg, rIn);
-        return `M ${p1.x} ${p1.y} A ${rOut} ${rOut} 0 0 0 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rIn} ${rIn} 0 0 1 ${p4.x} ${p4.y} Z`;
-      };
-
-      let html = `
-        <circle cx="${center}" cy="${center}" r="${rOuter}" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
-        <circle cx="${center}" cy="${center}" r="${rTransits}" fill="#fafafa" stroke="#e2e8f0" stroke-width="1.5" />
-        <circle cx="${center}" cy="${center}" r="${rNatal}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
-        <circle cx="${center}" cy="${center}" r="${rInner}" fill="#fdfbf7" stroke="#e2e8f0" stroke-width="1" />
-      `;
-
-      // 12 Colored Sign Arcs
-      ZODIAC_SIGNS.forEach((sign, sIdx) => {
-        const sLon = sIdx * 30;
-        const eLon = sLon + 30;
-        const mPt = getCoords(sLon + 15, (rOuter + rSigns) / 2);
-        html += `
-          <path d="${describeArc(sLon, eLon, rSigns, rOuter)}" fill="${sign.bg}" stroke="${sign.border}" stroke-width="1" />
-          <text x="${mPt.x}" y="${mPt.y}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="bold" fill="${sign.text}">${sign.symbol}</text>
-        `;
-      });
-
-      // Aspect Lines in Center
-      const planets = data.planets;
-      for (let i = 0; i < planets.length; i++) {
-        for (let j = i + 1; j < planets.length; j++) {
-          let diff = Math.abs(planets[i].longitude - planets[j].longitude);
-          if (diff > 180) diff = 360 - diff;
-          let color = null;
-          if (Math.abs(diff - 120) < 6) color = "#2563eb"; // Trine (Blue)
-          else if (Math.abs(diff - 90) < 6 || Math.abs(diff - 180) < 6) color = "#dc2626"; // Square/Opp (Red)
-          else if (Math.abs(diff - 60) < 5) color = "#059669"; // Sextile (Green)
-
-          if (color) {
-            const p1 = getCoords(planets[i].longitude, rInner - 2);
-            const p2 = getCoords(planets[j].longitude, rInner - 2);
-            html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="${color}" stroke-width="1" stroke-opacity="0.6" />`;
-          }
-        }
-      }
-
-      // Placidus Cusps Spokes
-      for (let h = 1; h <= 12; h++) {
-        const cuspLon = data.cusps[h];
-        const p1 = getCoords(cuspLon, rSigns);
-        const p2 = getCoords(cuspLon, rInner);
-        const isAxis = (h === 1 || h === 7 || h === 10 || h === 4);
-
-        const nextH = h === 12 ? 1 : h + 1;
-        let midH = (cuspLon + data.cusps[nextH]) / 2;
-        if (data.cusps[nextH] < cuspLon) midH = (cuspLon + data.cusps[nextH] + 360) / 2;
-        const numPt = getCoords(midH, rInner + 14);
-
-        html += `
-          <line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="${isAxis ? '#d97706' : '#cbd5e1'}" stroke-width="${isAxis ? '2' : '1'}" stroke-dasharray="${isAxis ? 'none' : '2 2'}" />
-          <text x="${numPt.x}" y="${numPt.y}" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="bold" fill="#64748b">${h}</text>
-        `;
-      }
-
-      // Ascendant Horizontal Axis Line
-      html += `
-        <line x1="${center - rOuter}" y1="${center}" x2="${center + rOuter}" y2="${center}" stroke="#d97706" stroke-width="2.5" />
-        <polygon points="${center - rOuter},${center} ${center - rOuter + 14},${center - 5} ${center - rOuter + 14},${center + 5}" fill="#d97706" />
-        <text x="${center - rOuter + 20}" y="${center - 8}" fill="#d97706" font-size="11" font-weight="bold">AC ${data.ascendant.formatted}</text>
-        <text x="${center + rOuter - 45}" y="${center - 8}" fill="#d97706" font-size="10" font-weight="bold">DC 7th</text>
-      `;
-
-      // MC Marker
-      const mcPt = getCoords(data.midheaven.longitude, rOuter);
-      html += `<text x="${mcPt.x}" y="${mcPt.y - 6}" text-anchor="middle" fill="#d97706" font-size="10" font-weight="bold">MC ${data.midheaven.formatted}</text>`;
-
-      // Outer Ring: Current Live Transits (With Red Badge for Retrogrades)
-      currentLiveTransits.forEach(p => {
-        const pt = getCoords(p.longitude, (rSigns + rTransits) / 2);
-        html += `
-          <g transform="translate(${pt.x}, ${pt.y})">
-            <circle cx="0" cy="0" r="10" fill="#ffffff" stroke="${p.color}" stroke-width="1.5" />
-            <text x="0" y="1" text-anchor="middle" dominant-baseline="central" font-size="8.5" font-weight="bold" fill="${p.color}">${p.abbrev}</text>
-            ${p.isRetro ? '<circle cx="8" cy="-6" r="4.5" fill="#dc2626" /><text x="8" y="-4" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#ffffff">R</text>' : ''}
-          </g>
-        `;
-      });
-
-      // Inner Ring: Natal Planets (With explicit Red (R) badge on wheel degrees)
-      planets.forEach(p => {
-        const lon = (currentChartView === "D9") ? (p.d9SignIndex * 30 + p.d9Deg) : p.longitude;
-        const pt = getCoords(lon, (rTransits + rNatal) / 2);
-        const degText = (currentChartView === "D9") ? (p.d9Deg + '°') : p.formatted;
-        html += `
-          <g transform="translate(${pt.x}, ${pt.y})">
-            <circle cx="0" cy="0" r="12" fill="${p.color}" />
-            <text x="0" y="1" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="bold" fill="#ffffff">${p.abbrev}</text>
-            <text x="0" y="17" text-anchor="middle" font-size="8" font-weight="bold" fill="#0f172a">
-              ${degText} ${p.isRetro ? '<tspan fill="#dc2626" font-weight="900"> (R)</tspan>' : ''}
-            </text>
-          </g>
-        `;
-      });
-
-      svg.innerHTML = html;
-    }
-
-    /* HORARY CALCULATOR */
-    function castHorary() {
-      const q = document.getElementById("horary-text").value.trim();
-      if (!q) {
-        alert("برائے مہربانی اپنا سوال درج کریں۔");
-        return;
-      }
-      const cat = document.getElementById("horary-category").value;
-      const topicInfo = HORARY_TOPICS[cat];
-      const now = new Date();
-      const res = calculateChartData(now, 24.8607, 67.0011);
-      if (!res) return;
-
-      lastHoraryResult = { q, topicInfo, res, time: now.toLocaleString("en-PK") };
-
-      document.getElementById("horary-output").style.display = "block";
-      document.getElementById("horary-topic-badge").textContent = topicInfo.title;
-      document.getElementById("horary-verdict-title").textContent = "معاملہ مثبت اور قابلِ غور ہے";
-      document.getElementById("horary-time-stamp").textContent = now.toLocaleString("en-PK");
-      document.getElementById("horary-user-desc").textContent = topicInfo.desc;
-
-      // Admin Breakdown
-      document.getElementById("horary-admin-asc").textContent = `Asc: ${res.ascendant.signName} ${res.ascendant.formatted}`;
-      document.getElementById("horary-admin-houses").textContent = topicInfo.houses.map(h => `H${h} (${ZODIAC_SIGNS[Math.floor(res.cusps[h] / 30) % 12].name})`).join(", ");
-      document.getElementById("horary-admin-karakas").textContent = topicInfo.karakas.join(", ");
-      const moon = res.planets.find(p => p.id === "Moon");
-      document.getElementById("horary-admin-moon").textContent = moon ? `${moon.signName} ${moon.formatted} (H${moon.houseNum})` : "";
-      document.getElementById("horary-admin-d9").textContent = res.ascendant.d9SignName;
-
-      if (isAdminActive) {
-        document.getElementById("horary-admin-card").style.display = "block";
-      }
-    }
-
-    function sendToWhatsApp() {
-      const q = document.getElementById("horary-text").value || "ذاتی سوال";
-      const catText = document.getElementById("horary-category").selectedOptions[0].text;
-      const msg = `السلام علیکم! میرا نام Astro Clarity کلائنٹ ہے۔\n\nموضوع: ${catText}\nسوال: ${q}\n\nمیں نے آپ کے JazzCash IBAN (PK78JCMA2608923005442230) پر 2,000 روپے منتقل کر دیے ہیں۔ برائے مہربانی رسید تصدیق فرما کر تفصیلی رہنمائی عنایت فرمائیں۔`;
-      window.open(`https://api.whatsapp.com/send?phone=${ASTRO_PROFILE.whatsappNumber}&text=${encodeURIComponent(msg)}`, "_blank");
-    }
-
-    function copyText(text, btn) {
-      navigator.clipboard.writeText(text).then(() => {
-        const original = btn.textContent;
-        btn.textContent = "Copied! ✓";
-        setTimeout(() => { btn.textContent = original; }, 2500);
-      });
-    }
-
-    /* TAB & VIEW SWITCHERS */
-    function switchTab(tab) {
-      if (tab === "natal") {
-        document.getElementById("natal-section").style.display = "block";
-        document.getElementById("horary-section").style.display = "none";
-        document.getElementById("tab-natal-btn").className = "btn-gold";
-        document.getElementById("tab-natal-btn").style.background = "#d97706";
-        document.getElementById("tab-natal-btn").style.color = "#ffffff";
-        document.getElementById("tab-horary-btn").style.background = "transparent";
-        document.getElementById("tab-horary-btn").style.color = "#334155";
-      } else {
-        document.getElementById("natal-section").style.display = "none";
-        document.getElementById("horary-section").style.display = "block";
-        document.getElementById("tab-horary-btn").className = "btn-gold";
-        document.getElementById("tab-horary-btn").style.background = "#d97706";
-        document.getElementById("tab-horary-btn").style.color = "#ffffff";
-        document.getElementById("tab-natal-btn").style.background = "transparent";
-        document.getElementById("tab-natal-btn").style.color = "#334155";
-      }
-    }
-
-    function switchChartView(view) {
-      currentChartView = view;
-      if (view === "D1") {
-        document.getElementById("view-d1-btn").style.background = "#d97706";
-        document.getElementById("view-d1-btn").style.color = "#ffffff";
-        document.getElementById("view-d9-btn").style.background = "#f1f5f9";
-        document.getElementById("view-d9-btn").style.color = "#334155";
-      } else {
-        document.getElementById("view-d9-btn").style.background = "#d97706";
-        document.getElementById("view-d9-btn").style.color = "#ffffff";
-        document.getElementById("view-d1-btn").style.background = "#f1f5f9";
-        document.getElementById("view-d1-btn").style.color = "#334155";
-      }
-      if (currentNatalChart) renderWheel(currentNatalChart);
-    }
-
-    function zoomWheel(delta) {
-      currentZoom = Math.min(1.8, Math.max(0.8, currentZoom + delta));
-      document.getElementById("wheel-wrapper").style.transform = `scale(${currentZoom})`;
-      document.getElementById("zoom-text").textContent = Math.round(currentZoom * 100) + "%";
-    }
-
-    /* ADMIN MODAL */
-    function openAdminModal() {
-      if (isAdminActive) {
-        isAdminActive = false;
-        document.getElementById("admin-toggle-btn").textContent = "🔒 Admin";
-        document.getElementById("admin-toggle-btn").style.background = "#f1f5f9";
-        document.getElementById("admin-toggle-btn").style.color = "#475569";
-        document.getElementById("admin-quick-load-btn").style.display = "none";
-        document.getElementById("horary-admin-card").style.display = "none";
-        alert("ایڈمن موڈ بند کر دیا گیا ہے۔");
-      } else {
-        document.getElementById("admin-pin-modal").style.display = "flex";
-      }
-    }
-
-    function closeAdminModal() {
-      document.getElementById("admin-pin-modal").style.display = "none";
-      document.getElementById("admin-pin-input").value = "";
-    }
-
-    function checkAdminPin() {
-      const pin = document.getElementById("admin-pin-input").value.trim();
-      if (pin === "786") {
-        isAdminActive = true;
-        closeAdminModal();
-        document.getElementById("admin-toggle-btn").textContent = "Admin Active ✓";
-        document.getElementById("admin-toggle-btn").style.background = "#059669";
-        document.getElementById("admin-toggle-btn").style.color = "#ffffff";
-        document.getElementById("admin-quick-load-btn").style.display = "inline-block";
-        if (lastHoraryResult) document.getElementById("horary-admin-card").style.display = "block";
-        alert("ایڈمن لاگ اِن کامیاب! آپ کا بٹن 'Load My Chart' اور خفیہ تکنیکی پینل فعال ہو چکا ہے۔");
-      } else {
-        alert("غلط پن کوڈ!");
-      }
+    function changeLanguage(lang) {
+      currentLang = lang;
+      const t = TRANSLATIONS[lang];
+      document.getElementById("html-root").dir = (lang === "en") ? "ltr" : "rtl";
+
+      document.getElementById("lbl-subtitle").textContent = t.subtitle;
+      document.getElementById("tab-natal-btn").textContent = t.tabNatal;
+      document.getElementById("tab-horary-btn").textContent = t.tabHorary;
+      document.getElementById("lbl-bulletin-title").textContent = t.bulletinTitle;
+      document.getElementById("lbl-bulletin-desc").textContent = t.bulletinDesc;
+      document.getElementById("lbl-bulletin-notice").innerHTML = t.bulletinNotice;
+
+      document.getElementById("lbl-form-title").textContent = t.formTitle;
+      document.getElementById("lbl-country").textContent = t.country;
+      document.getElementById("lbl-state").textContent = t.state;
+      document.getElementById("lbl-city").textContent = t.city;
+      document.getElementById("lbl-coords").textContent = t.coords;
+      document.getElementById("lbl-dob").textContent = t.dob;
+      document.getElementById("lbl-time").textContent = t.time;
+      document.getElementById("btn-generate").textContent = t.btnGenerate;
+
+      document.getElementById("lbl-placeholder-title").textContent = t.placeholderTitle;
+      document.getElementById("lbl-placeholder-desc").textContent = t.placeholderDesc;
+
+      document.getElementById("lbl-sum-asc").textContent = t.sumAsc;
+      document.getElementById("lbl-sum-mc").textContent = t.sumMc;
+      document.getElementById("lbl-sum-moon").textContent = t.sumMoon;
+      document.getElementById("lbl-sum-sun").textContent = t.sumSun;
+
+      document.getElementById("lbl-natal-table-title").children[0].textContent = t.natalTableTitle;
+      document.getElementById("lbl-transit-table-title").children[0].textContent = t.transitTableTitle;
+
+      document.getElementById("lbl-horary-title").textContent = t.horaryTitle;
+      document.getElementById("lbl-horary-cat").textContent = t.horaryCat;
+      document.getElementById("lbl-horary-input").textContent = t.horaryInput;
+      document.getElementById("btn-cast-horary").textContent = t.btnCastHorary;
     }
   </script>
 </body>
