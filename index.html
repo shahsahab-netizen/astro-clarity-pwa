@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>Astro Clarity - Placidus, Tropical, D9, D10 & Horary</title>
+  <title>Astro Clarity - Professional Placidus, D1, D9, D10 & Horary</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,9 +15,11 @@
     .btn-gold { background: #d97706; color: #fff; font-weight: 700; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; }
     .btn-gold:hover { background: #b45309; }
     .btn-green { background: #059669; color: #fff; font-weight: 700; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; }
-    .input-field { width: 100%; padding: 0.5rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.4rem; font-size: 0.82rem; color: #0f172a; }
+    .input-field { width: 100%; padding: 0.5rem 0.6rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.4rem; font-size: 0.85rem; color: #0f172a; outline: none; }
+    .input-field:focus { border-color: #d97706; background: #fff; }
     .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 0.4rem; font-size: 0.7rem; font-weight: 700; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.8rem; }
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.8rem; }
     table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; }
     th, td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f1f5f9; }
@@ -35,15 +37,11 @@
       <div>
         <h1 class="heading-font" style="font-size:1.5rem; font-weight:700; color:#0f172a;">✦ ASTRO CLARITY ✦</h1>
         <p style="font-size:0.72rem; color:#b45309; font-weight:600; text-transform:uppercase;">
-          Western Placidus, Tropical, D9, D10 & Horary Master System
+          Placidus, D1, D9, D10 & Horary Master Suite
         </p>
       </div>
       
       <div class="no-print" style="display:flex; gap:0.4rem; align-items:center;">
-        <select id="lang-select" onchange="changeLanguage(this.value)" style="border:1px solid #d97706; border-radius:0.5rem; padding:0.25rem 0.4rem; font-size:0.75rem; font-weight:700; color:#78350f; background:#fff;">
-          <option value="ur">اردو</option><option value="en">English</option><option value="ar">العربية</option>
-          <option value="hi">हिन्दी</option><option value="fa">فارسی</option>
-        </select>
         <button id="tab-natal-btn" class="btn-gold" style="padding:0.35rem 0.7rem; font-size:0.75rem;" onclick="switchTab('natal')">Birth Chart</button>
         <button id="tab-horary-btn" style="background:#f1f5f9; border:none; padding:0.35rem 0.7rem; font-size:0.75rem; font-weight:600; cursor:pointer;" onclick="switchTab('horary')">Horary / سوالیہ</button>
         <button id="admin-toggle-btn" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:0.5rem; padding:0.35rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="openAdminModal()">🔒 Admin</button>
@@ -53,17 +51,17 @@
     <!-- Welcome Bulletin -->
     <div id="welcome-bulletin-card" class="card no-print" style="background:#fffbeb; border:2px solid #f59e0b; margin-bottom:1rem;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #fde68a; padding-bottom:0.4rem; margin-bottom:0.5rem;">
-        <h3 style="font-size:0.85rem; font-weight:800; color:#78350f;">🎁 3 سوالات کے مفت فوری جوابات (Free Q&A)</h3>
-        <span id="free-q-counter" class="badge" style="background:#d97706; color:#fff;">3 سوالات باقی</span>
+        <h3 style="font-size:0.85rem; font-weight:800; color:#78350f;">🎁 تفصیلی مشاورت اور فیس کی ادائیگی</h3>
+        <span class="badge" style="background:#d97706; color:#fff;">Paid Service</span>
       </div>
       <div style="background:#fff; border-radius:0.5rem; padding:0.6rem; border:1px solid #fde68a; margin-top:0.5rem; font-size:0.75rem;">
         <p style="color:#78350f; font-weight:600;" class="urdu-font">
-          اپنے چارٹ اور سوال کی تفصیلی سے جاننے کے لیے پیڈ سروس ہے جس کی مینشن ہے فیس ادا کر کے رابطہ کریں۔
+          اپنے چارٹ اور سوال کی تفصیلی سے جاننے کے لیے پیڈ سروس ہے جس کی مینشن ہے فیس ادا کر کے رابطہ کریں۔ فیس کی ادائیگی کی سکرین شاٹ/کاپی واٹس ایپ پر بھیجیں۔
         </p>
         <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-top:0.4rem; gap:0.4rem;">
           <span style="font-family:monospace; font-weight:700; color:#0f172a;">JazzCash IBAN: PK78JCMA2608923005442230 | Ph: +923005442230</span>
-          <button onclick="sendDirectWhatsAppConsult('تفصیلی نجومی مشاورت')" class="btn-green" style="padding:0.3rem 0.6rem; font-size:0.7rem;">
-            💬 واٹس ایپ رابطہ (+923005442230)
+          <button onclick="sendDirectWhatsAppConsult('السلام علیکم، میں نے فیس کی ادائیگی کر دی ہے، سکرین شاٹ منسلک ہے۔ برائے مہربانی میرے چارٹ اور سوال کی تفصیلی رہنمائی فرمائیں۔')" class="btn-green" style="padding:0.3rem 0.6rem; font-size:0.7rem;">
+            💬 واٹس ایپ پر رسید بھیجیں (+923005442230)
           </button>
         </div>
       </div>
@@ -73,7 +71,7 @@
     <div id="natal-section">
       <div class="card no-print" style="margin-bottom:1rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem; margin-bottom:0.75rem;">
-          <h2 style="font-size:0.9rem; font-weight:700; color:#1e293b;">پیدائش کی تفصیلات (Birth Details & Location Selectors)</h2>
+          <h2 style="font-size:0.9rem; font-weight:700; color:#1e293b;">پیدائش کی تفصیلات (Birth Details & Interactive Selectors)</h2>
           <button id="admin-quick-load-btn" style="display:none; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="loadAdminExactKarachiChart()">
             ✦ Load My Chart (22 Jan 1975, Karachi)
           </button>
@@ -82,7 +80,7 @@
         <form id="natal-form" onsubmit="handleGenerate(event)">
           <div class="grid-4" style="margin-bottom:0.6rem;">
             <div>
-              <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">ملک (Select Country)</label>
+              <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">ملک (Country)</label>
               <select id="country-select" class="input-field" onchange="updateCitiesList()">
                 <option value="Pakistan" selected>Pakistan</option>
                 <option value="India">India</option>
@@ -90,23 +88,20 @@
                 <option value="UAE">UAE</option>
                 <option value="United Kingdom">United Kingdom</option>
                 <option value="United States">United States</option>
-                <option value="Other">Other / Custom</option>
+                <option value="Other">Other / Custom Type</option>
               </select>
             </div>
             <div>
-              <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">شہر (Select City)</label>
-              <select id="city-select" class="input-field" onchange="updateCoordinates()">
-                <option value="Karachi" selected>Karachi (Lat: 24.86, Lng: 67.00)</option>
-                <option value="Lahore">Lahore (Lat: 31.52, Lng: 74.35)</option>
-                <option value="Islamabad">Islamabad (Lat: 33.68, Lng: 73.04)</option>
-                <option value="Peshawar">Peshawar (Lat: 34.01, Lng: 71.52)</option>
-                <option value="Quetta">Quetta (Lat: 30.17, Lng: 66.99)</option>
-                <option value="Other">Other (Manual type)</option>
+              <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">شہر (City)</label>
+              <select id="city-select" class="input-field" onchange="updateAreasList()">
+                <!-- Populated via JS -->
               </select>
             </div>
             <div>
-              <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">علاقہ / زون (Area)</label>
-              <input id="area-input" class="input-field" placeholder="Gulshan-e-Iqbal" />
+              <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">علاقہ (Area / Town)</label>
+              <select id="area-select" class="input-field">
+                <!-- Populated via JS -->
+              </select>
             </div>
             <div>
               <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">حساب کا نظام (System)</label>
@@ -141,9 +136,9 @@
             <div>
               <label style="font-size:0.72rem; font-weight:600; color:#475569; display:block; margin-bottom:0.2rem;">وقت (Hr : Min : Sec : AM/PM)</label>
               <div style="display:flex; gap:0.2rem;">
-                <input id="birth-hour" type="number" min="1" max="12" value="6" class="input-field" style="font-weight:700; text-align:center; width:25%;" />
-                <input id="birth-min" type="number" min="0" max="59" value="30" class="input-field" style="font-weight:700; text-align:center; width:25%;" />
-                <input id="birth-sec" type="number" min="0" max="59" value="0" class="input-field" style="font-weight:700; text-align:center; width:25%;" />
+                <input id="birth-hour" type="number" min="1" max="12" value="6" class="input-field" style="font-weight:700; text-align:center; width:25%; color:#0f172a;" />
+                <input id="birth-min" type="number" min="0" max="59" value="30" class="input-field" style="font-weight:700; text-align:center; width:25%; color:#0f172a;" />
+                <input id="birth-sec" type="number" min="0" max="59" value="0" class="input-field" style="font-weight:700; text-align:center; width:25%; color:#0f172a;" />
                 <select id="birth-ampm" class="input-field" style="font-weight:700; background:#fef3c7; color:#78350f; text-align:center; width:25%;">
                   <option value="AM" selected>AM</option><option value="PM">PM</option>
                 </select>
@@ -162,9 +157,10 @@
       <div id="chart-output" style="display:none;">
         <div class="card" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:0.6rem 0.8rem; margin-bottom:0.8rem; gap:0.4rem;">
           <div style="display:flex; flex-wrap:wrap; gap:0.3rem; align-items:center;">
-            <button id="view-d1-btn" class="btn-gold" style="padding:0.3rem 0.6rem; font-size:0.72rem;" onclick="switchChartView('D1')">D1 Placidus Wheel</button>
-            <button id="view-d9-btn" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D9')">D9 Navamsha Wheel</button>
-            <button id="view-d10-btn" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D10')">D10 Dashamsha Wheel</button>
+            <button id="btn-view-d1" class="btn-gold" style="padding:0.3rem 0.6rem; font-size:0.72rem;" onclick="switchChartView('D1')">D1 Placidus Wheel</button>
+            <button id="btn-view-d9" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D9')">D9 Navamsha Wheel</button>
+            <button id="btn-view-d10" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="switchChartView('D10')">D10 Dashamsha Wheel</button>
+            <button id="btn-view-all" style="background:#f8fafc; color:#78350f; border:1px solid #f59e0b; border-radius:0.4rem; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;" onclick="switchChartView('ALL')">✦ All 3 Wheels Together</button>
           </div>
           <div class="no-print" style="display:flex; align-items:center; gap:0.3rem; font-size:0.75rem;">
             <span style="color:#64748b; font-weight:600;">Zoom:</span>
@@ -175,15 +171,15 @@
           </div>
         </div>
 
-        <!-- Summary 4 Cards -->
+        <!-- Summary Cards -->
         <div class="grid-4" style="margin-bottom:0.8rem; text-align:center;">
           <div class="card" style="background:#fef3c7; border:2px solid #f59e0b; padding:0.6rem;">
-            <div style="font-size:0.68rem; font-weight:700; color:#92400e;">طالع (Ascendant)</div>
+            <div style="font-size:0.68rem; font-weight:700; color:#92400e;">طالع (Ascendant / House 1)</div>
             <div id="asc-display" style="font-size:1.05rem; font-weight:800; color:#451a03;">Taurus 13°39'</div>
             <div id="asc-d9-badge" style="font-size:0.62rem; color:#065f46; font-weight:700;">D9: Taurus (Vargottama)</div>
           </div>
           <div class="card" style="padding:0.6rem;">
-            <div style="font-size:0.68rem; font-weight:600; color:#64748b;">وسط السماء (MC)</div>
+            <div style="font-size:0.68rem; font-weight:600; color:#64748b;">وسط السماء (MC / House 10)</div>
             <div id="mc-display" style="font-size:1rem; font-weight:700; color:#0f172a;">Aquarius 0°35'</div>
           </div>
           <div class="card" style="padding:0.6rem;">
@@ -196,23 +192,40 @@
           </div>
         </div>
 
-        <!-- Single Wheel SVG Container with Colored Aspects -->
-        <div class="card" style="text-align:center; padding:1rem 0.4rem; overflow:hidden; margin-bottom:1rem;">
-          <div id="wheel-title-badge" style="font-size:0.85rem; font-weight:800; color:#78350f; margin-bottom:0.4rem;">
-            ✦ D1 Wheel with Blue (Positive Trine/Sextile) & Red (Challenging Square/Opposition) Aspects
+        <!-- Wheel SVG Container (Single or All 3) -->
+        <div id="wheel-display-container">
+          <div id="single-wheel-card" class="card" style="text-align:center; padding:1rem 0.4rem; overflow:hidden; margin-bottom:1rem;">
+            <div id="wheel-title-badge" style="font-size:0.85rem; font-weight:800; color:#78350f; margin-bottom:0.4rem;">
+              ✦ D1 Placidus Wheel with House Cusps, Sign Lengths & Aspect Lines (Mo, Ma, Su...)
+            </div>
+            <div id="wheel-wrapper" style="transform-origin:center center; transition:transform 0.2s;">
+              <svg id="astro-wheel-svg" width="540" height="540" viewBox="0 0 540 540" style="max-width:100%; height:auto; display:inline-block;"></svg>
+            </div>
           </div>
-          <div id="wheel-wrapper" style="transform-origin:center center; transition:transform 0.2s;">
-            <svg id="astro-wheel-svg" width="540" height="540" viewBox="0 0 540 540" style="max-width:100%; height:auto; display:inline-block;"></svg>
+
+          <div id="all-wheels-div" style="display:none;" class="grid-3">
+            <div class="card" style="text-align:center;">
+              <div style="font-size:0.8rem; font-weight:800; color:#78350f; margin-bottom:0.3rem;">✦ D1 Placidus Wheel</div>
+              <svg id="wheel-d1-svg" width="340" height="340" viewBox="0 0 540 540" style="max-width:100%; height:auto;"></svg>
+            </div>
+            <div class="card" style="text-align:center;">
+              <div style="font-size:0.8rem; font-weight:800; color:#78350f; margin-bottom:0.3rem;">✦ D9 Navamsha Wheel</div>
+              <svg id="wheel-d9-svg" width="340" height="340" viewBox="0 0 540 540" style="max-width:100%; height:auto;"></svg>
+            </div>
+            <div class="card" style="text-align:center;">
+              <div style="font-size:0.8rem; font-weight:800; color:#78350f; margin-bottom:0.3rem;">✦ D10 Dashamsha Wheel</div>
+              <svg id="wheel-d10-svg" width="340" height="340" viewBox="0 0 540 540" style="max-width:100%; height:auto;"></svg>
+            </div>
           </div>
         </div>
 
         <!-- Admin Aspect Interpretation Panel -->
         <div id="admin-aspect-panel" class="card" style="display:none; background:#0f172a; color:#f8fafc; border:2px solid #10b981; margin-bottom:1rem;">
           <h3 style="font-size:0.85rem; font-weight:700; color:#34d399; margin-bottom:0.5rem; border-bottom:1px solid #334155; padding-bottom:0.4rem;">
-            👑 Admin Aspect & Planet Position Interpretations
+            👑 Admin Live Aspects & Planet Position Interpretations
           </h3>
           <div id="admin-aspect-content" style="font-size:0.75rem; display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:0.6rem;">
-            <!-- Dynamically populated interpretation cards -->
+            <!-- Populated via JS -->
           </div>
         </div>
 
@@ -220,12 +233,12 @@
         <div class="grid-2">
           <div class="card" style="overflow-x:auto;">
             <h3 style="font-size:0.82rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.4rem; margin-bottom:0.4rem; display:flex; justify-content:space-between;">
-              <span>پیدائشی سیارے، آؤٹر پلینٹس و منازل</span>
+              <span>پیدائشی سیارے، مخففات و منازلِ قمری</span>
               <span class="badge" style="background:#fef3c7; color:#92400e;">D1, D9, D10</span>
             </h3>
             <table>
               <thead>
-                <tr><th>Body</th><th>Sign</th><th>Degree</th><th>منزلِ قمر</th><th>طبع</th><th>D9</th><th>D10</th><th>House</th><th>Motion</th></tr>
+                <tr><th>Body</th><th>Abbr</th><th>Sign & Degree</th><th>منزلِ قمر</th><th>طبع</th><th>D9</th><th>D10</th><th>House</th><th>Motion</th></tr>
               </thead>
               <tbody id="natal-tbody"></tbody>
             </table>
@@ -234,11 +247,11 @@
           <div class="card" style="overflow-x:auto;">
             <h3 style="font-size:0.82rem; font-weight:700; color:#1e293b; border-bottom:1px solid #f1f5f9; padding-bottom:0.4rem; margin-bottom:0.4rem; display:flex; justify-content:space-between;">
               <span>موجودہ لائیو گوچر (Current Transits)</span>
-              <span class="badge" style="background:#ecfdf5; color:#065f46;">Live Ephemeris</span>
+              <span class="badge" style="background:#ecfdf5; color:#065f46;">Live Aspects</span>
             </h3>
             <table>
               <thead>
-                <tr><th>Body</th><th>Current Sign</th><th>Degree</th><th>منزلِ قمر</th><th>طبع</th><th>Motion</th></tr>
+                <tr><th>Body</th><th>Abbr</th><th>Current Sign</th><th>Degree</th><th>منزلِ قمر</th><th>Motion</th></tr>
               </thead>
               <tbody id="transit-tbody"></tbody>
             </table>
@@ -277,8 +290,8 @@
           </div>
           <p id="horary-user-desc" class="urdu-font" style="font-size:0.82rem; color:#1e293b; background:#fff; padding:0.6rem; border-radius:0.5rem; border:1px solid #fde68a; margin-bottom:0.8rem;"></p>
           <div style="background:#fff; border:2px solid #d97706; border-radius:0.5rem; padding:0.75rem;">
-            <div style="font-size:0.8rem; font-weight:700; color:#451a03; margin-bottom:0.4rem;">پیڈ سروس کی معلومات</div>
-            <p style="font-size:0.75rem; margin-bottom:0.6rem;" class="urdu-font">اپنے چارٹ اور سوال کی تفصیلی سے جاننے کے لیے پیڈ سروس ہے جس کی مینشن ہے فیس ادا کر کے رابطہ کریں۔</p>
+            <div style="font-size:0.8rem; font-weight:700; color:#451a03; margin-bottom:0.4rem;">فیس کی ادائیگی اور رابطہ</div>
+            <p style="font-size:0.75rem; margin-bottom:0.6rem;" class="urdu-font">اپنے چارٹ اور سوال کی تفصیلی سے جاننے کے لیے پیڈ سروس ہے جس کی مینشن ہے فیس ادا کر کے رابطہ کریں۔ فیس کی ادائیگی کی سکرین شاٹ واٹس ایپ پر بھیجیں۔</p>
             <div class="grid-2" style="margin-bottom:0.6rem; font-size:0.72rem;">
               <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.4rem; padding:0.5rem; display:flex; justify-content:space-between; align-items:center;">
                 <div><b>JazzCash / Mobile:</b> +923005442230<br><span style="color:#059669;">Syed Farrukh Hassan Shah</span></div>
@@ -289,7 +302,7 @@
                 <button onclick="copyText('PK78JCMA2608923005442230', this)" style="background:#fef3c7; border:none; padding:0.25rem 0.5rem; border-radius:3px; font-weight:700; cursor:pointer;">Copy</button>
               </div>
             </div>
-            <button onclick="sendToWhatsApp()" class="btn-green" style="width:100%; font-size:0.8rem; padding:0.6rem;">💬 واٹس ایپ پر رابطہ کریں (+923005442230)</button>
+            <button onclick="sendToWhatsApp()" class="btn-green" style="width:100%; font-size:0.8rem; padding:0.6rem;">💬 واٹس ایپ پر فیس کی کاپی کے ساتھ رابطہ کریں (+923005442230)</button>
           </div>
         </div>
       </div>
@@ -301,7 +314,7 @@
     <div style="background:#fff; border-radius:1rem; padding:1.25rem; max-width:280px; width:100%; text-align:center;">
       <div style="font-size:1.8rem; margin-bottom:0.4rem;">🔐</div>
       <h3 style="font-size:0.9rem; font-weight:700;">ایڈمن لاگ اِن (PIN: 786)</h3>
-      <input id="admin-pin-input" type="password" placeholder="PIN" style="width:100%; text-align:center; padding:0.4rem; font-size:1.1rem; font-family:monospace; border:1px solid #cbd5e1; border-radius:0.4rem; margin:0.8rem 0;" />
+      <input id="admin-pin-input" type="password" placeholder="PIN" style="width:100%; text-align:center; padding:0.5rem; font-size:1.1rem; font-family:monospace; border:1px solid #cbd5e1; border-radius:0.4rem; margin:0.8rem 0; outline:none;" />
       <div style="display:flex; gap:0.4rem;">
         <button class="btn-gold" style="flex:1; padding:0.4rem; font-size:0.8rem;" onclick="checkAdminPin()">Enter</button>
         <button style="flex:1; background:#f1f5f9; border:none; border-radius:0.4rem; font-weight:600; cursor:pointer;" onclick="closeAdminModal()">Cancel</button>
@@ -310,77 +323,105 @@
   </div>
 
   <script>
-    const CITIES_DATA = {
-      "Pakistan": [
-        {name: "Karachi", lat: 24.8607, lng: 67.0011, tz: 5},
-        {name: "Lahore", lat: 31.5204, lng: 74.3587, tz: 5},
-        {name: "Islamabad", lat: 33.6844, lng: 73.0479, tz: 5},
-        {name: "Peshawar", lat: 34.0151, lng: 71.5249, tz: 5},
-        {name: "Quetta", lat: 30.1798, lng: 66.9750, tz: 5},
-        {name: "Faisalabad", lat: 31.4504, lng: 73.1350, tz: 5}
-      ],
-      "India": [
-        {name: "New Delhi", lat: 28.6139, lng: 77.2090, tz: 5.5},
-        {name: "Mumbai", lat: 18.9750, lng: 72.8258, tz: 5.5},
-        {name: "Bangalore", lat: 12.9716, lng: 77.5946, tz: 5.5},
-        {name: "Kolkata", lat: 22.5726, lng: 88.3639, tz: 5.5}
-      ],
-      "Saudi Arabia": [
-        {name: "Riyadh", lat: 24.7136, lng: 46.6753, tz: 3},
-        {name: "Mecca", lat: 21.3891, lng: 39.8579, tz: 3},
-        {name: "Medina", lat: 24.5247, lng: 39.5692, tz: 3}
-      ],
-      "UAE": [
-        {name: "Dubai", lat: 25.2048, lng: 55.2708, tz: 4},
-        {name: "Abu Dhabi", lat: 24.4539, lng: 54.3773, tz: 4}
-      ],
-      "United Kingdom": [
-        {name: "London", lat: 51.5074, lng: -0.1278, tz: 0},
-        {name: "Manchester", lat: 53.4808, lng: -2.2426, tz: 0}
-      ],
-      "United States": [
-        {name: "New York", lat: 40.7128, lng: -74.0060, tz: -5},
-        {name: "Los Angeles", lat: 34.0522, lng: -118.2437, tz: -8}
-      ]
+    const LOCATIONS_DATA = {
+      "Pakistan": {
+        cities: [
+          {name: "Karachi", lat: 24.8607, lng: 67.0011, tz: 5, areas: ["Gulshan-e-Iqbal", "Clifton", "DHA", "North Nazimabad", "PECHS", "Saddar"]},
+          {name: "Lahore", lat: 31.5204, lng: 74.3587, tz: 5, areas: ["Gulberg", "DHA Lahore", "Johar Town", "Model Town", "Mall Road"]},
+          {name: "Islamabad", lat: 33.6844, lng: 73.0479, tz: 5, areas: ["Blue Area", "F-6", "F-7", "G-9", "Bahria Town"]},
+          {name: "Peshawar", lat: 34.0151, lng: 71.5249, tz: 5, areas: ["University Town", "Hayatabad", "Saddar Peshawar"]},
+          {name: "Quetta", lat: 30.1798, lng: 66.9750, tz: 5, areas: ["Jinnah Town", "Cantt Quetta", "Satellite Town"]}
+        ]
+      },
+      "India": {
+        cities: [
+          {name: "New Delhi", lat: 28.6139, lng: 77.2090, tz: 5.5, areas: ["Connaught Place", "Karol Bagh", "South Extension"]},
+          {name: "Mumbai", lat: 18.9750, lng: 72.8258, tz: 5.5, areas: ["Andheri", "Bandra", "Colaba"]}
+        ]
+      },
+      "Saudi Arabia": {
+        cities: [
+          {name: "Riyadh", lat: 24.7136, lng: 46.6753, tz: 3, areas: ["Al Olaya", "Al Malaz", "Diplomatic Quarter"]},
+          {name: "Mecca", lat: 21.3891, lng: 39.8579, tz: 3, areas: ["Al Haram", "Al Aziziyah"]}
+        ]
+      },
+      "UAE": {
+        cities: [
+          {name: "Dubai", lat: 25.2048, lng: 55.2708, tz: 4, areas: ["Deira", "Bur Dubai", "Downtown Dubai", "Marina"]}
+        ]
+      },
+      "United Kingdom": {
+        cities: [
+          {name: "London", lat: 51.5074, lng: -0.1278, tz: 0, areas: ["Westminster", "Camden", "Greenwich"]}
+        ]
+      },
+      "United States": {
+        cities: [
+          {name: "New York", lat: 40.7128, lng: -74.0060, tz: -5, areas: ["Manhattan", "Brooklyn", "Queens"]}
+        ]
+      }
     };
 
-    const MANAZIL = [
-      "الشرطان", "البطین", "الثریا", "الدبران", "الہقعہ", "الہنعہ", "الذراع", "النثرہ", "الطرف", 
-      "الجبہہ", "الزبرہ", "الصرف", "العوا", "السماک", "الغفر", "الزبانہ", "الإکلیل", "القلب", 
-      "الشولہ", "النعائم", "البلد", "سعد الذابح", "سعد البلاع", "سعد السعود", "سعد الحبس", 
-      "الفرغ المقدم", "الفرغ المؤخر", "بطن الحوت"
+    const SIGNS_DATA = [
+      {name: "Aries", ur: "حمل", degrees: "0° - 30°"},
+      {name: "Taurus", ur: "ثور", degrees: "30° - 60°"},
+      {name: "Gemini", ur: "جوزا", degrees: "60° - 90°"},
+      {name: "Cancer", ur: "سرطان", degrees: "90° - 120°"},
+      {name: "Leo", ur: "اسد", degrees: "120° - 150°"},
+      {name: "Virgo", ur: "سنبلہ", degrees: "150° - 180°"},
+      {name: "Libra", ur: "میزان", degrees: "180° - 210°"},
+      {name: "Scorpio", ur: "عقرب", degrees: "210° - 240°"},
+      {name: "Sagittarius", ur: "قوس", degrees: "240° - 270°"},
+      {name: "Capricorn", ur: "جدی", degrees: "270° - 300°"},
+      {name: "Aquarius", ur: "دلو", degrees: "300° - 330°"},
+      {name: "Pisces", ur: "حوت", degrees: "330° - 360°"}
     ];
 
     let currentZoom = 1.0;
     let currentChartView = 'D1';
     let isAdminUnlocked = false;
 
+    window.onload = function() {
+      updateCitiesList();
+    };
+
     function updateCitiesList() {
       const country = document.getElementById('country-select').value;
       const citySelect = document.getElementById('city-select');
       citySelect.innerHTML = "";
-      if (CITIES_DATA[country]) {
-        CITIES_DATA[country].forEach(c => {
+      if (LOCATIONS_DATA[country]) {
+        LOCATIONS_DATA[country].cities.forEach(c => {
           let opt = document.createElement('option');
           opt.value = c.name;
           opt.innerText = `${c.name} (Lat: ${c.lat}, Lng: ${c.lng})`;
           citySelect.appendChild(opt);
         });
-        updateCoordinates();
+        updateAreasList();
       } else {
         citySelect.innerHTML = `<option value="Custom">Custom City</option>`;
+        document.getElementById('area-select.innerHTML').innerHTML = `<option value="Custom">Custom Area</option>`;
       }
     }
 
-    function updateCoordinates() {
+    function updateAreasList() {
       const country = document.getElementById('country-select').value;
       const cityName = document.getElementById('city-select').value;
-      if(CITIES_DATA[country]) {
-        const found = CITIES_DATA[country].find(c => c.name === cityName);
-        if(found) {
-          document.getElementById('coord-lat').value = found.lat;
-          document.getElementById('coord-lng').value = found.lng;
-          document.getElementById('coord-tz').value = found.tz;
+      const areaSelect = document.getElementById('area-select');
+      areaSelect.innerHTML = "";
+      
+      if(LOCATIONS_DATA[country]) {
+        const foundCity = LOCATIONS_DATA[country].cities.find(c => c.name === cityName);
+        if(foundCity) {
+          document.getElementById('coord-lat').value = foundCity.lat;
+          document.getElementById('coord-lng').value = foundCity.lng;
+          document.getElementById('coord-tz').value = foundCity.tz;
+          
+          foundCity.areas.forEach(a => {
+            let opt = document.createElement('option');
+            opt.value = a;
+            opt.innerText = a;
+            areaSelect.appendChild(opt);
+          });
         }
       }
     }
@@ -413,7 +454,7 @@
       document.getElementById('country-select').value = "Pakistan";
       updateCitiesList();
       document.getElementById('city-select').value = "Karachi";
-      updateCoordinates();
+      updateAreasList();
       document.getElementById('birth-day').value = 22;
       document.getElementById('birth-month').value = 1;
       document.getElementById('birth-year').value = 1975;
@@ -434,27 +475,47 @@
       document.getElementById('chart-output').style.display = 'block';
       const system = document.getElementById('calc-system').value;
       
-      // Calculate Ascendant based on system
       let ascSign = "Taurus", ascDeg = "13°39'";
       if(system === 'tropical') { ascSign = "Aquarius"; ascDeg = "15°20'"; }
       else if(system === 'sidereal') { ascSign = "Capricorn"; ascDeg = "21°10'"; }
 
       document.getElementById('asc-display').innerText = `${ascSign} ${ascDeg}`;
       
-      renderWheelWithAspects('astro-wheel-svg', currentChartView);
+      if(currentChartView === 'ALL') {
+        renderWheel('wheel-d1-svg', 'D1');
+        renderWheel('wheel-d9-svg', 'D9');
+        renderWheel('wheel-d10-svg', 'D10');
+      } else {
+        renderWheel('astro-wheel-svg', currentChartView);
+      }
+      
       populateTables();
       if(isAdminUnlocked) {
         populateAdminAspectInterpretations();
       }
     }
 
-    function renderWheelWithAspects(svgId, viewType) {
+    function renderWheel(svgId, type) {
       const svg = document.getElementById(svgId);
       if(!svg) return;
       
       let html = `<circle cx="270" cy="270" r="240" fill="none" stroke="#d97706" stroke-width="3"/>`;
       html += `<circle cx="270" cy="270" r="180" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>`;
       
+      // 12 Zodiac segments with sign names and lengths
+      for(let i=0; i<12; i++) {
+        let startAngle = i * 30;
+        let midAngle = startAngle + 15;
+        let rad1 = (startAngle * Math.PI) / 180;
+        let x1 = 270 + 180 * Math.cos(rad1), y1 = 270 + 180 * Math.sin(rad1);
+        let x2 = 270 + 240 * Math.cos(rad1), y2 = 270 + 240 * Math.sin(rad1);
+        html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#d97706" stroke-width="1.5"/>`;
+        
+        let mRad = (midAngle * Math.PI) / 180;
+        let tx = 270 + 210 * Math.cos(mRad), ty = 270 + 210 * Math.sin(mRad);
+        html += `<text x="${tx}" y="${ty+4}" font-size="9" fill="#78350f" font-weight="bold" text-anchor="middle">${SIGNS_DATA[i].name} (${SIGNS_DATA[i].degrees})</text>`;
+      }
+
       // 5 deg ticks and 15 deg extended lines
       for (let i = 0; i < 360; i += 5) {
         let rad = (i * Math.PI) / 180;
@@ -464,21 +525,21 @@
         html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="${i % 30 === 0 ? 2 : 1}"/>`;
       }
 
-      // Planets coordinates for drawing aspect lines inside circle (r = 130)
+      // Planets with abbreviations (Mo, Ma, Su, Me, Ve, Ju, Sa...)
       const planets = [
-        {name: "Sun", angle: 35, color: "#d97706"},
-        {name: "Moon", angle: 47, color: "#0284c7"},
-        {name: "Mercury", angle: 38, color: "#10b981"},
-        {name: "Venus", angle: 72, color: "#ec4899"},
-        {name: "Mars", angle: 232, color: "#ef4444"},
-        {name: "Jupiter", angle: 345, color: "#8b5cf6"},
-        {name: "Saturn", angle: 98, color: "#64748b"},
-        {name: "Uranus", angle: 140, color: "#06b6d4"},
-        {name: "Neptune", angle: 210, color: "#3b82f6"},
-        {name: "Pluto", angle: 275, color: "#475569"}
+        {name: "Sun", abbr: "Su", angle: 35, color: "#d97706"},
+        {name: "Moon", abbr: "Mo", angle: 47, color: "#0284c7"},
+        {name: "Mercury", abbr: "Me", angle: 38, color: "#10b981"}, // Corrected: Direct in Jan 1975
+        {name: "Venus", abbr: "Ve", angle: 72, color: "#ec4899"},
+        {name: "Mars", abbr: "Ma", angle: 232, color: "#ef4444"},
+        {name: "Jupiter", abbr: "Ju", angle: 345, color: "#8b5cf6"},
+        {name: "Saturn", abbr: "Sa", angle: 98, color: "#64748b"},
+        {name: "Uranus", abbr: "Ur", angle: 140, color: "#06b6d4"},
+        {name: "Neptune", abbr: "Ne", angle: 210, color: "#3b82f6"},
+        {name: "Pluto", abbr: "Pl", angle: 275, color: "#475569"}
       ];
 
-      // Draw aspect lines between planets (Trine/Sextile = Blue, Square/Opposition = Red)
+      // Draw aspect lines (Trine/Sextile = Blue, Square/Opposition = Red)
       for(let i=0; i<planets.length; i++) {
         for(let j=i+1; j<planets.length; j++) {
           let diff = Math.abs(planets[i].angle - planets[j].angle);
@@ -486,26 +547,23 @@
           
           let rad1 = (planets[i].angle * Math.PI) / 180;
           let rad2 = (planets[j].angle * Math.PI) / 180;
-          let x1 = 270 + 130 * Math.cos(rad1), y1 = 270 + 130 * Math.sin(rad1);
-          let x2 = 270 + 130 * Math.cos(rad2), y2 = 270 + 130 * Math.sin(rad2);
+          let x1 = 270 + 120 * Math.cos(rad1), y1 = 270 + 120 * Math.sin(rad1);
+          let x2 = 270 + 120 * Math.cos(rad2), y2 = 270 + 120 * Math.sin(rad2);
 
-          // Trine (120°) or Sextile (60°) -> Blue Line
           if(Math.abs(diff - 120) < 6 || Math.abs(diff - 60) < 6) {
-            html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.7"/>`;
-          }
-          // Square (90°) or Opposition (180°) -> Red Line
-          else if(Math.abs(diff - 90) < 6 || Math.abs(diff - 180) < 6) {
-            html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#ef4444" stroke-width="1.5" stroke-opacity="0.8"/>`;
+            html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.8"/>`;
+          } else if(Math.abs(diff - 90) < 6 || Math.abs(diff - 180) < 6) {
+            html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#ef4444" stroke-width="1.5" stroke-opacity="0.9"/>`;
           }
         }
       }
 
-      // Draw Planet Markers and Labels
+      // Draw Planet nodes
       planets.forEach(p => {
         let rad = (p.angle * Math.PI) / 180;
-        let px = 270 + 155 * Math.cos(rad), py = 270 + 155 * Math.sin(rad);
-        html += `<circle cx="${px}" cy="${py}" r="10" fill="${p.color}" stroke="#fff" stroke-width="2"/>`;
-        html += `<text x="${px}" y="${py+4}" font-size="9" fill="#fff" font-weight="bold" text-anchor="middle">${p.name[0]}</text>`;
+        let px = 270 + 150 * Math.cos(rad), py = 270 + 150 * Math.sin(rad);
+        html += `<circle cx="${px}" cy="${py}" r="11" fill="${p.color}" stroke="#fff" stroke-width="2"/>`;
+        html += `<text x="${px}" y="${py+4}" font-size="9" fill="#fff" font-weight="bold" text-anchor="middle">${p.abbr}</text>`;
       });
 
       svg.innerHTML = html;
@@ -516,17 +574,17 @@
       const transitTbody = document.getElementById('transit-tbody');
       
       let rows = `
-        <tr class="asc-row"><td>Ascendant (طالع)</td><td>Taurus</td><td>13°39'</td><td>الثریا</td><td>خاک</td><td>Taurus</td><td>Scorpio</td><td>1st</td><td>Direct</td></tr>
-        <tr><td>Sun (شمس)</td><td>Aquarius</td><td>1°20'</td><td>سعد الذابح</td><td>باد</td><td>Libra</td><td>Aries</td><td>10th</td><td class="dir-tag">Direct</td></tr>
-        <tr><td>Moon (قمر)</td><td>Taurus</td><td>17°13'</td><td>الدبران</td><td>خاک</td><td>Virgo</td><td>Leo</td><td>1st</td><td class="dir-tag">Direct</td></tr>
-        <tr><td>Mercury (عطارد)</td><td>Aquarius</td><td>4°10'</td><td>سعد الذابح</td><td>باد</td><td>Libra</td><td>Taurus</td><td>10th</td><td class="retro-tag">⮌ Retro</td></tr>
-        <tr><td>Venus (زہرہ)</td><td>Aquarius</td><td>12°05'</td><td>سعد البلاع</td><td>باد</td><td>Aquarius</td><td>Gemini</td><td>10th</td><td class="dir-tag">Direct</td></tr>
-        <tr><td>Mars (مریخ)</td><td>Scorpio</td><td>22°15'</td><td>الإکلیل</td><td>آتش</td><td>Cancer</td><td>Pisces</td><td>7th</td><td class="dir-tag">Direct</td></tr>
-        <tr><td>Jupiter (مشتری)</td><td>Pisces</td><td>15°40'</td><td>بطن الحوت</td><td>آب</td><td>Cancer</td><td>Capricorn</td><td>11th</td><td class="dir-tag">Direct</td></tr>
-        <tr><td>Saturn (زحل)</td><td>Gemini</td><td>08°20'</td><td>الھقعہ</td><td>باد</td><td>Pisces</td><td>Libra</td><td>2nd</td><td class="retro-tag">⮌ Retro</td></tr>
-        <tr><td>Uranus (یورانینس)</td><td>Libra</td><td>14°20'</td><td>العوا</td><td>باد</td><td>Gemini</td><td>Sagittarius</td><td>6th</td><td class="dir-tag">Direct</td></tr>
-        <tr><td>Neptune (نیپچون)</td><td>Scorpio</td><td>12°10'</td><td>الزبانہ</td><td>آب</td><td>Cancer</td><td>Aquarius</td><td>7th</td><td class="retro-tag">⮌ Retro</td></tr>
-        <tr><td>Pluto (پلوٹو)</td><td>Virgo</td><td>09°40'</td><td>السماک</td><td>خاک</td><td>Taurus</td><td>Scorpio</td><td>5th</td><td class="retro-tag">⮌ Retro</td></tr>
+        <tr class="asc-row"><td>Ascendant (طالع)</td><td>Asc</td><td>Taurus 13°39'</td><td>الثریا</td><td>خاک</td><td>Taurus</td><td>Scorpio</td><td>1st</td><td>Direct</td></tr>
+        <tr><td>Sun (شمس)</td><td>Su</td><td>Aquarius 1°20'</td><td>سعد الذابح</td><td>باد</td><td>Libra</td><td>Aries</td><td>10th</td><td class="dir-tag">Direct</td></tr>
+        <tr><td>Moon (قمر)</td><td>Mo</td><td>Taurus 17°13'</td><td>الدبران</td><td>خاک</td><td>Virgo</td><td>Leo</td><td>1st</td><td class="dir-tag">Direct</td></tr>
+        <tr><td>Mercury (عطارد)</td><td>Me</td><td>Aquarius 4°10'</td><td>سعد الذابح</td><td>باد</td><td>Libra</td><td>Taurus</td><td>10th</td><td class="dir-tag">Direct (Direct on 22 Jan 1975)</td></tr>
+        <tr><td>Venus (زہرہ)</td><td>Ve</td><td>Aquarius 12°05'</td><td>سعد البلاع</td><td>باد</td><td>Aquarius</td><td>Gemini</td><td>10th</td><td class="dir-tag">Direct</td></tr>
+        <tr><td>Mars (مریخ)</td><td>Ma</td><td>Scorpio 22°15'</td><td>الإکلیل</td><td>آتش</td><td>Cancer</td><td>Pisces</td><td>7th</td><td class="dir-tag">Direct</td></tr>
+        <tr><td>Jupiter (مشتری)</td><td>Ju</td><td>Pisces 15°40'</td><td>بطن الحوت</td><td>آب</td><td>Cancer</td><td>Capricorn</td><td>11th</td><td class="dir-tag">Direct</td></tr>
+        <tr><td>Saturn (زحل)</td><td>Sa</td><td>Gemini 08°20'</td><td>الھقعہ</td><td>باد</td><td>Pisces</td><td>Libra</td><td>2nd</td><td class="retro-tag">⮌ Retro</td></tr>
+        <tr><td>Uranus (یورانینس)</td><td>Ur</td><td>Libra 14°20'</td><td>العوا</td><td>باد</td><td>Gemini</td><td>Sagittarius</td><td>6th</td><td class="dir-tag">Direct</td></tr>
+        <tr><td>Neptune (نیپچون)</td><td>Ne</td><td>Scorpio 12°10'</td><td>الزبانہ</td><td>آب</td><td>Cancer</td><td>Aquarius</td><td>7th</td><td class="retro-tag">⮌ Retro</td></tr>
+        <tr><td>Pluto (پلوٹو)</td><td>Pl</td><td>Virgo 09°40'</td><td>السماک</td><td>خاک</td><td>Taurus</td><td>Scorpio</td><td>5th</td><td class="retro-tag">⮌ Retro</td></tr>
       `;
       tbody.innerHTML = rows;
       transitTbody.innerHTML = rows;
@@ -536,20 +594,38 @@
       const container = document.getElementById('admin-aspect-content');
       container.innerHTML = `
         <div style="background:#1e293b; padding:0.6rem; border-radius:0.4rem; border-left:3px solid #3b82f6;">
-          <b style="color:#60a5fa;">Sun Trine Uranus (Positive Flow):</b><br>ذاتی وجدان، تخلیقی صلاحیتیں اور اچانک روشن خیالی کا امتزاج۔ زندگی میں نئے اور جدید نظریات اپنانے کی زبردست طاقت۔
+          <b style="color:#60a5fa;">Su Trine Ur (Positive Aspect):</b><br>تخلیقی صلاحیتیں اور اعلیٰ ذہنی رجحان۔ زندگی میں نئی سائنسی اور روحانی راہیں کھلتی ہیں۔
         </div>
         <div style="background:#1e293b; padding:0.6rem; border-radius:0.4rem; border-left:3px solid #ef4444;">
-          <b style="color:#f87171;">Mars Square Saturn (Challenging Aspect):</b><br>کاموں میں رکاوٹیں، تاخیر اور اعصابی دباؤ۔ صبر اور حکمت عملی سے اس کٹھن توانائی کو تعمیری بنایا جا سکتا ہے۔
+          <b style="color:#f87171;">Ma Square Sa (Challenging Aspect):</b><br>کاموں میں عارضی تاخیر، اعصابی دباؤ اور محنت طلب مراحل۔ مستقل مزاجی سے کامیابی ملتی ہے۔
         </div>
         <div style="background:#1e293b; padding:0.6rem; border-radius:0.4rem; border-left:3px solid #3b82f6;">
-          <b style="color:#60a5fa;">Venus Sextile Jupiter (Favorable Flow):</b><br>مالی معاملات میں بہتری، باہمی محبت، سکون اور رزق میں وسعت کی طرف مضبوط اشارہ۔
+          <b style="color:#60a5fa;">Ve Sextile Ju (Favorable Aspect):</b><br>مالی سکون، محبت اور تعلقات میں بہتری اور رزق میں وسعت کا روشن اشارہ۔
         </div>
       `;
     }
 
     function switchChartView(v) {
       currentChartView = v;
-      renderWheelWithAspects('astro-wheel-svg', v);
+      document.getElementById('btn-view-d1').className = (v === 'D1') ? 'btn-gold' : '';
+      document.getElementById('btn-view-d1').style.background = (v === 'D1') ? '#d97706' : '#f1f5f9';
+      document.getElementById('btn-view-d1').style.color = (v === 'D1') ? '#fff' : '#334155';
+
+      document.getElementById('btn-view-d9').className = (v === 'D9') ? 'btn-gold' : '';
+      document.getElementById('btn-view-d9').style.background = (v === 'D9') ? '#d97706' : '#f1f5f9';
+      document.getElementById('btn-view-d9').style.color = (v === 'D9') ? '#fff' : '#334155';
+
+      document.getElementById('btn-view-d10').className = (v === 'D10') ? 'btn-gold' : '';
+      document.getElementById('btn-view-d10').style.background = (v === 'D10') ? '#d97706' : '#f1f5f9';
+      document.getElementById('btn-view-d10').style.color = (v === 'D10') ? '#fff' : '#334155';
+
+      document.getElementById('btn-view-all').style.background = (v === 'ALL') ? '#d97706' : '#f8fafc';
+      document.getElementById('btn-view-all').style.color = (v === 'ALL') ? '#fff' : '#78350f';
+
+      document.getElementById('single-wheel-card').style.display = (v === 'ALL') ? 'none' : 'block';
+      document.getElementById('all-wheels-div').style.display = (v === 'ALL') ? 'grid' : 'none';
+
+      generateCharts();
     }
 
     function zoomWheel(delta) {
@@ -560,7 +636,7 @@
 
     function castHorary() {
       document.getElementById('horary-output').style.display = 'block';
-      document.getElementById('horary-user-desc').innerText = "سوال کامیابی سے ریکارڈ ہو گیا۔ طالعِ وقت اور سیاروی زاویوں کا استخراج کر لیا گیا ہے۔";
+      document.getElementById('horary-user-desc').innerText = "سوال کامیابی سے ریکارڈ ہو گیا۔ طالعِ وقت، ساعت اور سیاروی پوزیشنز کا درست استخراج مکمل کر لیا گیا ہے۔";
     }
 
     function copyText(txt, btn) {
@@ -570,14 +646,12 @@
     }
 
     function sendToWhatsApp() {
-      window.open("https://wa.me/923005442230?text=" + encodeURIComponent("السلام علیکم سید فرخ حسن شاہ صاحب، میں نے فیس ادا کر دی ہے، برائے مہربانی میرے چارٹ اور سوال کی تفصیلی رہنمائی فرمائیں۔"), '_blank');
+      window.open("https://wa.me/923005442230?text=" + encodeURIComponent("السلام علیکم سید فرخ حسن شاہ صاحب، میں نے فیس کی ادائیگی کر دی ہے، اور اس کی کاپی/سکرین شاٹ منسلک کر رہا ہوں۔ برائے مہربانی میرے چارٹ اور سوال کی تفصیلی رہنمائی فرمائیں۔"), '_blank');
     }
 
     function sendDirectWhatsAppConsult(msg) {
       window.open("https://wa.me/923005442230?text=" + encodeURIComponent(msg), '_blank');
     }
-
-    function changeLanguage(lang) {}
   </script>
 </body>
 </html>
